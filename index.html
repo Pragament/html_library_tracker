@@ -10,197 +10,268 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
     </script>
-
     <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
-
     <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
     </script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Chart.js for reports -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
 
     <style>
-        /* ── Reset & Base ── */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-sm: 6px;
+            --transition: all 0.2s ease;
+        }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #f4f7fc;
-            color: #1e293b;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+        /* Login */
+        #loginPage {
             min-height: 100vh;
             display: flex;
-        }
-
-        /* ── Sidebar ── */
-        .sidebar {
-            width: 220px;
-            background: #0f172a;
-            color: #e2e8f0;
-            padding: 1.5rem 0;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 100;
-            transition: transform 0.3s;
-        }
-        .sidebar-brand {
-            padding: 0 1.5rem 2rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #f8fafc;
-            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            padding: 20px;
         }
-        .sidebar-brand i {
-            color: #60a5fa;
-        }
-        .sidebar-nav {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            padding: 0 0.75rem;
-        }
-        .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.7rem 1rem;
-            border-radius: 8px;
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-        .sidebar-nav a:hover {
-            background: #1e293b;
-            color: #f8fafc;
-        }
-        .sidebar-nav a.active {
-            background: #1e293b;
-            color: #60a5fa;
-            font-weight: 600;
-        }
-        .sidebar-nav a i {
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        .sidebar-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #1e293b;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        /* ── Main ── */
-        .main {
-            margin-left: 220px;
-            flex: 1;
-            padding: 1.5rem 2rem;
-            min-height: 100vh;
-        }
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+        .login-card {
             background: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            padding: 48px 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
         }
-        .topbar-left {
+        .login-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+        .login-card .sub {
+            color: var(--gray-500);
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        .login-card .logo-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .google-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray-700);
+            width: 100%;
+            justify-content: center;
+        }
+        .google-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+            box-shadow: var(--shadow);
+        }
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* App Layout */
+        #app {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        #app.visible {
+            display: flex;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 10px 24px;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.92);
         }
-        .topbar-left h1 {
-            font-size: 1.3rem;
-            font-weight: 600;
+        .topbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--gray-900);
+        }
+        .topbar .brand span {
+            color: var(--primary);
         }
         .topbar-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .supabase-status {
+        .status-badge {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
-            padding: 0.3rem 0.8rem;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
             border-radius: 20px;
-            background: #f1f5f9;
+            background: var(--gray-100);
         }
-        .supabase-status .dot {
-            width: 10px;
-            height: 10px;
+        .status-badge.online {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-badge.offline {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             display: inline-block;
         }
-        .dot.green {
-            background: #22c55e;
+        .status-badge.online .status-dot {
+            background: var(--success);
         }
-        .dot.red {
-            background: #ef4444;
+        .status-badge.offline .status-dot {
+            background: var(--danger);
         }
-        .dot.gray {
-            background: #94a3b8;
-        }
-        .user-badge {
+        .user-info {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-600);
         }
-        .user-badge img {
+        .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            object-fit: cover;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
         }
-        .user-badge .logout-btn {
+        .logout-btn {
             background: none;
             border: none;
-            color: #94a3b8;
+            color: var(--gray-400);
             cursor: pointer;
-            font-size: 0.9rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            transition: 0.2s;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
         }
-        .user-badge .logout-btn:hover {
-            background: #f1f5f9;
-            color: #ef4444;
+        .logout-btn:hover {
+            color: var(--danger);
+            background: #fee2e2;
         }
 
-        /* ── Pages ── */
+        /* Navigation */
+        .nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+        .nav button {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .nav button:hover {
+            color: var(--gray-700);
+            background: var(--gray-50);
+        }
+        .nav button.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
         .page {
             display: none;
-            animation: fadeUp 0.3s ease;
+            animation: fadeIn 0.25s ease;
         }
         .page.active {
             display: block;
         }
-        @keyframes fadeUp {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(8px);
             }
             to {
                 opacity: 1;
@@ -208,1825 +279,2245 @@
             }
         }
 
-        /* ── Cards / Grid ── */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .stat-card {
+        /* Cards */
+        .card {
             background: white;
-            padding: 1.2rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-            border-left: 4px solid #60a5fa;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
         }
-        .stat-card .num {
-            font-size: 2rem;
-            font-weight: 700;
+        .card:hover {
+            box-shadow: var(--shadow-lg);
         }
-        .stat-card .label {
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-        .stat-card.borrowed {
-            border-left-color: #f59e0b;
-        }
-        .stat-card.available {
-            border-left-color: #22c55e;
-        }
-        .stat-card.books {
-            border-left-color: #8b5cf6;
-        }
-
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-bottom: 2rem;
-        }
-        .quick-actions button {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.7rem 1.4rem;
-            border: none;
-            border-radius: 10px;
+        .card-title {
+            font-size: 16px;
             font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.2s;
-            background: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        }
-        .quick-actions button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .quick-actions .primary {
-            background: #2563eb;
-            color: white;
-        }
-        .quick-actions .primary:hover {
-            background: #1d4ed8;
-        }
-        .quick-actions .success {
-            background: #16a34a;
-            color: white;
-        }
-        .quick-actions .success:hover {
-            background: #15803d;
-        }
-        .quick-actions .warning {
-            background: #d97706;
-            color: white;
-        }
-        .quick-actions .warning:hover {
-            background: #b45309;
+            color: var(--gray-800);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* ── Table / Catalog ── */
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .topbar {
+                padding: 10px 16px;
+            }
+            .nav {
+                padding: 0 12px;
+            }
+            .main {
+                padding: 16px;
+            }
+            .card {
+                padding: 16px;
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 1rem;
-            background: white;
-            padding: 0.8rem 1.2rem;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        }
-        .toolbar input,
-        .toolbar select {
-            padding: 0.5rem 0.8rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background: #f8fafc;
-        }
-        .toolbar input:focus,
-        .toolbar select:focus {
-            outline: 2px solid #60a5fa;
-            outline-offset: 1px;
-        }
-        .toolbar .search-wrap {
-            flex: 1;
-            min-width: 180px;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0 0.6rem;
-        }
-        .toolbar .search-wrap input {
+            gap: 8px;
+            padding: 8px 18px;
             border: none;
-            background: transparent;
-            flex: 1;
-            padding: 0.5rem 0;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            background: var(--gray-100);
+            color: var(--gray-700);
         }
-        .toolbar .search-wrap i {
-            color: #94a3b8;
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #16a34a;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #d97706;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-600);
+        }
+        .btn-outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
         }
 
-        .table-wrap {
+        /* Forms */
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
             background: white;
-            border-radius: 12px;
-            overflow: auto;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            color: var(--gray-900);
+            font-family: inherit;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-700);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
         th {
             text-align: left;
-            padding: 0.8rem 1rem;
-            background: #f8fafc;
+            padding: 10px 12px;
+            background: var(--gray-50);
             font-weight: 600;
-            border-bottom: 2px solid #e2e8f0;
+            color: var(--gray-600);
+            border-bottom: 2px solid var(--gray-200);
+            white-space: nowrap;
             cursor: pointer;
             user-select: none;
-            white-space: nowrap;
         }
         th:hover {
-            background: #f1f5f9;
+            color: var(--gray-900);
         }
         td {
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-100);
             vertical-align: middle;
         }
         tr:hover td {
-            background: #fafbfc;
+            background: var(--gray-50);
         }
         .badge {
             display: inline-block;
-            padding: 0.2rem 0.7rem;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
         }
-        .badge.available {
+        .badge-available {
             background: #dcfce7;
             color: #166534;
         }
-        .badge.borrowed {
+        .badge-borrowed {
             background: #fef3c7;
             color: #92400e;
         }
-        .empty-state {
+        .badge-archived {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .tag {
+            display: inline-block;
+            background: var(--gray-200);
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--gray-700);
+            margin: 2px 2px;
+        }
+        .tag-@ {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .tag-# {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .search-bar input,
+        .search-bar select {
+            flex: 1;
+            min-width: 160px;
+        }
+        .search-bar .btn {
+            flex-shrink: 0;
+        }
+        .search-bar .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Scanner */
+        #scannerContainer {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: var(--gray-900);
+            position: relative;
+        }
+        #scannerContainer video {
+            width: 100%;
+            display: block;
+        }
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius);
+            pointer-events: none;
+            box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3);
+        }
+        .scanner-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Quick Action Cards */
+        .quick-action {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--gray-200);
             text-align: center;
-            padding: 3rem 1rem;
-            color: #94a3b8;
-        }
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.4;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
             cursor: pointer;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            color: #64748b;
-            transition: 0.2s;
-            font-size: 0.9rem;
+            transition: var(--transition);
         }
-        .action-btn:hover {
-            background: #f1f5f9;
-            color: #0f172a;
+        .quick-action:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
         }
-        .action-btn.danger:hover {
-            color: #ef4444;
-            background: #fef2f2;
+        .quick-action .icon {
+            font-size: 36px;
+            margin-bottom: 8px;
         }
-        .action-btn.success:hover {
-            color: #16a34a;
-            background: #f0fdf4;
+        .quick-action .label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+        .quick-action .desc {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 2px;
         }
 
-        /* ── Forms / Modals ── */
+        /* Stats */
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* Modal */
         .modal-overlay {
+            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
-            display: none;
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            z-index: 200;
-            padding: 1rem;
+            padding: 20px;
         }
         .modal-overlay.open {
             display: flex;
         }
         .modal {
             background: white;
-            border-radius: 16px;
-            max-width: 520px;
+            border-radius: var(--radius);
+            max-width: 560px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            animation: fadeUp 0.25s ease;
+            padding: 28px 32px;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.2s ease;
         }
-        .modal h2 {
-            margin-bottom: 0.5rem;
+        @keyframes modalIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .modal-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.6rem;
+            margin-bottom: 16px;
         }
-        .modal .sub {
-            color: #64748b;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
         }
-        .modal label {
-            display: block;
-            font-weight: 600;
-            margin: 0.8rem 0 0.3rem;
-            font-size: 0.9rem;
-        }
-        .modal input,
-        .modal select {
-            width: 100%;
-            padding: 0.6rem 0.8rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-        .modal input:focus,
-        .modal select:focus {
-            outline: 2px solid #60a5fa;
-            outline-offset: 1px;
-        }
-        .modal .btn-row {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-        .modal .btn-row button {
-            flex: 1;
-            padding: 0.7rem;
+        .modal-close {
+            background: none;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 24px;
             cursor: pointer;
-            transition: 0.2s;
-            min-width: 100px;
+            color: var(--gray-400);
+            padding: 0 4px;
         }
-        .modal .btn-row .btn-primary {
-            background: #2563eb;
-            color: white;
+        .modal-close:hover {
+            color: var(--gray-700);
         }
-        .modal .btn-row .btn-primary:hover {
-            background: #1d4ed8;
-        }
-        .modal .btn-row .btn-success {
-            background: #16a34a;
-            color: white;
-        }
-        .modal .btn-row .btn-success:hover {
-            background: #15803d;
-        }
-        .modal .btn-row .btn-danger {
-            background: #dc2626;
-            color: white;
-        }
-        .modal .btn-row .btn-danger:hover {
-            background: #b91c1c;
-        }
-        .modal .btn-row .btn-secondary {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-        .modal .btn-row .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .modal .qr-scanner-wrap {
-            margin: 1rem 0;
-            padding: 0.5rem;
-            border: 2px dashed #e2e8f0;
-            border-radius: 10px;
-            background: #f8fafc;
-            min-height: 200px;
-            position: relative;
-        }
-        .modal .qr-scanner-wrap #qr-reader {
-            width: 100%;
-        }
-        .modal .qr-scanner-wrap .scan-hint {
-            text-align: center;
-            color: #94a3b8;
-            padding: 2rem 0;
-            font-size: 0.95rem;
-        }
-        .modal .qr-scanner-wrap .scan-hint i {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        /* ── Settings ── */
-        .settings-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        }
-        .settings-card h3 {
-            margin-bottom: 0.5rem;
+        .modal-footer {
             display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-        .settings-card .desc {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        .settings-card .form-group {
-            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 16px;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            align-items: end;
-        }
-        .settings-card .form-group label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            min-width: 100px;
-        }
-        .settings-card .form-group input {
-            flex: 1;
-            min-width: 180px;
-            padding: 0.5rem 0.8rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-        }
-        .settings-card .form-group button {
-            padding: 0.5rem 1.2rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #f1f5f9;
-        }
-        .settings-card .form-group button:hover {
-            background: #e2e8f0;
-        }
-        .settings-card .form-group button.primary {
-            background: #2563eb;
-            color: white;
-        }
-        .settings-card .form-group button.primary:hover {
-            background: #1d4ed8;
-        }
-        .settings-card .form-group button.success {
-            background: #16a34a;
-            color: white;
-        }
-        .settings-card .form-group button.success:hover {
-            background: #15803d;
-        }
-        .settings-card .form-group button.danger {
-            background: #dc2626;
-            color: white;
-        }
-        .settings-card .form-group button.danger:hover {
-            background: #b91c1c;
-        }
-        .settings-card .csv-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 0.5rem;
         }
 
-        /* ── Login ── */
-        .login-page {
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+            width: 100%;
+        }
+        .toast {
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            background: var(--gray-900);
+            color: white;
+            font-size: 14px;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: #f4f7fc;
+            gap: 10px;
         }
-        .login-card {
-            background: white;
-            padding: 3rem 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        .toast.success {
+            background: #166534;
+        }
+        .toast.error {
+            background: #991b1b;
+        }
+        .toast.warning {
+            background: #92400e;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Misc */
+        .empty-state {
             text-align: center;
-            max-width: 400px;
-            width: 100%;
+            padding: 40px 20px;
+            color: var(--gray-400);
         }
-        .login-card h1 {
-            font-size: 2rem;
-            margin-bottom: 0.3rem;
-        }
-        .login-card .sub {
-            color: #64748b;
-            margin-bottom: 2rem;
-        }
-        .login-card .google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            background: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .login-card .google-btn:hover {
-            background: #f8fafc;
-            border-color: #94a3b8;
-        }
-        .login-card .google-btn img {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 220px;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main {
-                margin-left: 0;
-                padding: 1rem;
-            }
-            .topbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .topbar-right {
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-            .modal {
-                padding: 1.5rem;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .toolbar .search-wrap {
-                min-width: unset;
-            }
-            .settings-card .form-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .settings-card .form-group input {
-                min-width: unset;
-            }
-            .quick-actions button {
-                flex: 1;
-                justify-content: center;
-                min-width: 120px;
-            }
-            .mobile-toggle {
-                display: block !important;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: #1e293b;
-                cursor: pointer;
-                padding: 0.2rem 0.5rem;
-            }
-        }
-        .mobile-toggle {
-            display: none;
-        }
-
-        /* ── Misc ── */
-        .text-muted {
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-        .mt-1 {
-            margin-top: 0.5rem;
-        }
-        .mb-1 {
-            margin-bottom: 0.5rem;
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
         }
         .flex {
             display: flex;
-            align-items: center;
-            gap: 0.6rem;
         }
-        .gap-1 {
-            gap: 0.5rem;
+        .flex-center {
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .gap-4 {
+            gap: 16px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mt-4 {
+            margin-top: 16px;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-sm {
+            font-size: 13px;
+        }
+        .text-muted {
+            color: var(--gray-500);
         }
         .fw-600 {
             font-weight: 600;
         }
-        .clickable {
-            cursor: pointer;
+        .w-full {
+            width: 100%;
         }
         .hidden {
             display: none !important;
         }
-        .w-full {
-            width: 100%;
+
+        /* AutoComplete */
+        .autocomplete-wrap {
+            position: relative;
+        }
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: var(--shadow-lg);
+            display: none;
+        }
+        .autocomplete-list.open {
+            display: block;
+        }
+        .autocomplete-list .item {
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .autocomplete-list .item:hover {
+            background: var(--gray-50);
+        }
+        .autocomplete-list .item .highlight {
+            font-weight: 600;
+            color: var(--primary);
         }
 
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 0.8rem 1.6rem;
-            border-radius: 10px;
-            background: #0f172a;
-            color: white;
+        /* Revision history inline */
+        .revision-item {
+            font-size: 12px;
+            color: var(--gray-500);
+            padding: 2px 0;
+            border-bottom: 1px dashed var(--gray-200);
+        }
+        .revision-item .user {
             font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            z-index: 300;
-            animation: fadeUp 0.3s ease;
-            max-width: 400px;
+            color: var(--gray-700);
         }
-        .toast.success {
-            background: #16a34a;
+
+        /* Scrollable table container */
+        .table-scroll {
+            max-height: 460px;
+            overflow-y: auto;
         }
-        .toast.error {
-            background: #dc2626;
+
+        /* Settings */
+        .settings-group {
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 16px;
+            margin-bottom: 16px;
         }
-        .toast.warning {
-            background: #d97706;
+        .settings-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .settings-group .label {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+        .settings-group .desc {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ─── SIDEBAR ─── -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <i class="fas fa-book-open"></i> LibManager
-        </div>
-        <nav class="sidebar-nav">
-            <a class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a data-page="catalog"><i class="fas fa-list"></i> Catalog</a>
-            <a data-page="scan-book"><i class="fas fa-qrcode"></i> Scan Book</a>
-            <a data-page="scan-borrower"><i class="fas fa-id-card"></i> Scan Borrower</a>
-            <a data-page="reports"><i class="fas fa-file-alt"></i> Reports</a>
-            <a data-page="settings"><i class="fas fa-cog"></i> Settings</a>
-        </nav>
-        <div class="sidebar-footer">v1.0 · School Library</div>
-    </aside>
-
-    <!-- ─── MAIN ─── -->
-    <main class="main" id="mainApp">
-
-        <!-- Top Bar -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
-                <h1 id="pageTitle">Dashboard</h1>
-            </div>
-            <div class="topbar-right">
-                <div class="supabase-status" id="supaStatus">
-                    <span class="dot gray" id="supaDot"></span>
-                    <span id="supaLabel">Supabase: Not connected</span>
-                </div>
-                <div class="user-badge" id="userBadge">
-                    <img id="userAvatar" src="" alt="avatar" />
-                    <span id="userName">User</span>
-                    <button class="logout-btn" id="logoutBtn" title="Sign out"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-            </div>
-        </header>
-
-        <!-- ─── PAGES ─── -->
-
-        <!-- DASHBOARD -->
-        <section class="page active" id="page-dashboard">
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card books"><div class="num" id="statTotal">0</div><div class="label">Total Books</div></div>
-                <div class="stat-card available"><div class="num" id="statAvailable">0</div><div class="label">Available</div></div>
-                <div class="stat-card borrowed"><div class="num" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
-                <div class="stat-card" style="border-left-color:#8b5cf6;"><div class="num" id="statBorrowers">0</div><div class="label">Borrowers</div></div>
-            </div>
-
-            <div class="quick-actions">
-                <button class="primary" onclick="openScanBook()"><i class="fas fa-qrcode"></i> Scan Book QR</button>
-                <button class="success" onclick="openScanBorrower()"><i class="fas fa-id-card"></i> Scan Borrower QR</button>
-                <button class="warning" onclick="openBorrowForm()"><i class="fas fa-hand-holding"></i> Borrow Book</button>
-                <button style="background:#8b5cf6;color:white;" onclick="openReturnForm()"><i class="fas fa-undo-alt"></i> Return Book</button>
-                <button onclick="navigateTo('catalog')"><i class="fas fa-list"></i> View Catalog</button>
-            </div>
-
-            <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                <h3 style="margin-bottom:0.8rem;"><i class="fas fa-clock"></i> Recent Activity</h3>
-                <div id="recentActivity"><p class="text-muted">No recent activity.</p></div>
-            </div>
-        </section>
-
-        <!-- CATALOG -->
-        <section class="page" id="page-catalog">
-            <div class="toolbar">
-                <div class="search-wrap">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="catalogSearch" placeholder="Search title, ISBN, borrower..." oninput="renderCatalog()" />
-                </div>
-                <select id="catalogFilter" onchange="renderCatalog()">
-                    <option value="all">All</option>
-                    <option value="available">Available</option>
-                    <option value="borrowed">Borrowed</option>
-                </select>
-                <select id="catalogSort" onchange="renderCatalog()">
-                    <option value="title">Sort by Title</option>
-                    <option value="status">Sort by Status</option>
-                    <option value="borrower">Sort by Borrower</option>
-                </select>
-                <button style="background:#2563eb;color:white;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;" onclick="openAddBook()">
-                    <i class="fas fa-plus"></i> Add Book
-                </button>
-            </div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>ISBN</th>
-                            <th>Status</th>
-                            <th>Borrower</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="catalogBody"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- SCAN BOOK -->
-        <section class="page" id="page-scan-book">
-            <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                <h2><i class="fas fa-qrcode"></i> Scan Book QR Code</h2>
-                <p class="text-muted">Position the book's QR code in front of the camera.</p>
-                <div style="margin:1rem 0;max-width:480px;" id="bookScannerContainer">
-                    <div id="bookQrReader" style="width:100%;"></div>
-                </div>
-                <p id="bookScanResult" class="text-muted">Waiting for scan...</p>
-                <div class="btn-row" style="margin-top:1rem;">
-                    <button class="btn-secondary" onclick="stopBookScanner()"><i class="fas fa-stop"></i> Stop</button>
-                    <button class="btn-primary" onclick="openBorrowForm()"><i class="fas fa-hand-holding"></i> Borrow (manual)</button>
-                    <button style="background:#8b5cf6;color:white;border:none;padding:0.6rem 1.2rem;border-radius:8px;cursor:pointer;" onclick="openReturnForm()"><i class="fas fa-undo-alt"></i> Return (manual)</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- SCAN BORROWER -->
-        <section class="page" id="page-scan-borrower">
-            <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                <h2><i class="fas fa-id-card"></i> Scan Borrower QR Code</h2>
-                <p class="text-muted">Position the student ID card's QR code in front of the camera.</p>
-                <div style="margin:1rem 0;max-width:480px;" id="borrowerScannerContainer">
-                    <div id="borrowerQrReader" style="width:100%;"></div>
-                </div>
-                <p id="borrowerScanResult" class="text-muted">Waiting for scan...</p>
-                <div class="btn-row" style="margin-top:1rem;">
-                    <button class="btn-secondary" onclick="stopBorrowerScanner()"><i class="fas fa-stop"></i> Stop</button>
-                    <button class="btn-primary" onclick="openBorrowForm()"><i class="fas fa-hand-holding"></i> Borrow (manual)</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- REPORTS -->
-        <section class="page" id="page-reports">
-            <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                <h2><i class="fas fa-file-alt"></i> Reports</h2>
-                <p class="text-muted">View and filter your catalog with borrowed / available status.</p>
-                <div class="toolbar" style="margin-top:1rem;">
-                    <div class="search-wrap">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="reportSearch" placeholder="Search..." oninput="renderReports()" />
-                    </div>
-                    <select id="reportFilter" onchange="renderReports()">
-                        <option value="all">All</option>
-                        <option value="available">Available</option>
-                        <option value="borrowed">Borrowed</option>
-                    </select>
-                </div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>#</th><th>Title</th><th>ISBN</th><th>Status</th><th>Borrower</th><th>Due Date</th></tr></thead>
-                        <tbody id="reportBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- SETTINGS -->
-        <section class="page" id="page-settings">
-            <div class="settings-card">
-                <h3><i class="fas fa-database"></i> Supabase Connection</h3>
-                <p class="desc">Configure your Supabase project to sync data to the cloud.</p>
-                <div class="form-group">
-                    <label>Supabase URL</label>
-                    <input type="text" id="supaUrl" placeholder="https://your-project.supabase.co" />
-                </div>
-                <div class="form-group" style="margin-top:0.8rem;">
-                    <label>Supabase Key</label>
-                    <input type="password" id="supaKey" placeholder="your-anon-key" />
-                </div>
-                <div class="form-group" style="margin-top:1rem;">
-                    <button class="primary" onclick="connectSupabase()"><i class="fas fa-link"></i> Connect</button>
-                    <button class="success" onclick="pushToSupabase()"><i class="fas fa-upload"></i> Push Data to Supabase</button>
-                    <button class="danger" onclick="clearSupabaseConfig()"><i class="fas fa-trash"></i> Clear Config</button>
-                </div>
-                <div id="supaConnectStatus" class="mt-1 text-muted"></div>
-            </div>
-
-            <div class="settings-card">
-                <h3><i class="fas fa-file-export"></i> Export / Import CSV</h3>
-                <p class="desc">Export your catalog to CSV or import from a CSV file.</p>
-                <div class="csv-actions">
-                    <button class="primary" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
-                    <label class="btn-secondary" style="padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;background:#f1f5f9;display:inline-flex;align-items:center;gap:0.5rem;">
-                        <i class="fas fa-upload"></i> Import CSV
-                        <input type="file" accept=".csv" style="display:none;" onchange="importCSV(event)" />
-                    </label>
-                </div>
-            </div>
-
-            <div class="settings-card">
-                <h3><i class="fas fa-trash-alt"></i> Data Management</h3>
-                <p class="desc">Clear all local data (this cannot be undone).</p>
-                <button class="danger" onclick="clearAllData()"><i class="fas fa-trash"></i> Clear All Local Data</button>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ─── MODALS ─── -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent">
-            <!-- dynamically filled -->
+    <!-- ====== LOGIN PAGE ====== -->
+    <div id="loginPage">
+        <div class="login-card">
+            <div class="logo-icon">📚</div>
+            <h1>Library Manager</h1>
+            <p class="sub">School Library Lending System</p>
+            <button class="google-btn" id="googleLoginBtn">
+                <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Sign in with Google
+            </button>
+            <p style="margin-top:14px;font-size:12px;color:var(--gray-400);">Only authorized school staff can access.</p>
         </div>
     </div>
 
-    <!-- ─── TOAST ─── -->
-    <div id="toastContainer"></div>
+    <!-- ====== APP ====== -->
+    <div id="app">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="brand">📚 Library<span>Manager</span></div>
+            <div class="topbar-right">
+                <div class="status-badge offline" id="statusBadge">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Offline</span>
+                </div>
+                <div class="user-info">
+                    <span id="userNameDisplay">User</span>
+                    <div class="user-avatar" id="userAvatar">U</div>
+                </div>
+                <button class="logout-btn" id="logoutBtn" title="Sign out">⏻</button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav" id="mainNav">
+            <button class="active" data-page="dashboard">📊 Dashboard</button>
+            <button data-page="catalog">📖 Catalog</button>
+            <button data-page="transactions">🔄 Transactions</button>
+            <button data-page="reports">📈 Reports</button>
+            <button data-page="settings">⚙️ Settings</button>
+        </nav>
+
+        <!-- Main -->
+        <div class="main">
+
+            <!-- ====== DASHBOARD ====== -->
+            <div class="page active" id="page-dashboard">
+                <div class="grid-3" id="statsGrid" style="margin-bottom:20px;">
+                    <div class="stat-card"><div class="number" id="statBooks">0</div><div class="label">Total Books</div></div>
+                    <div class="stat-card"><div class="number" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
+                    <div class="stat-card"><div class="number" id="statAvailable">0</div><div class="label">Available</div></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">⚡ Quick Actions</div>
+                        <div class="grid-3">
+                            <div class="quick-action" onclick="openScanner('book')">
+                                <div class="icon">📷</div>
+                                <div class="label">Scan Book</div>
+                                <div class="desc">QR or enter title</div>
+                            </div>
+                            <div class="quick-action" onclick="openScanner('student')">
+                                <div class="icon">👤</div>
+                                <div class="label">Scan Student</div>
+                                <div class="desc">QR or enter ID/name</div>
+                            </div>
+                            <div class="quick-action" onclick="openBorrowReturn()">
+                                <div class="icon">🔄</div>
+                                <div class="label">Borrow / Return</div>
+                                <div class="desc">Quick transaction</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📋 Recent Activity</div>
+                        <div id="recentActivity" style="max-height:200px;overflow-y:auto;">
+                            <div class="empty-state"><div class="icon">📭</div>No recent activity</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-title">👥 Students <span class="text-muted text-sm" id="studentCount">(0)</span></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                        <input type="text" id="studentQuickSearch" placeholder="Search students by @ or name..." style="flex:1;min-width:160px;" />
+                        <button class="btn btn-primary btn-sm" onclick="importStudentsCSV()">📥 Import CSV</button>
+                    </div>
+                    <div style="max-height:180px;overflow-y:auto;" id="studentQuickList">
+                        <div class="empty-state text-sm">No students loaded. Import a CSV with columns: admission, name, class</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== CATALOG ====== -->
+            <div class="page" id="page-catalog">
+                <div class="card">
+                    <div class="card-title">📖 Book Catalog</div>
+                    <div class="search-bar">
+                        <input type="text" id="catalogSearch" placeholder="Search by title, author, @, #, ISBN..." style="flex:2;" />
+                        <select id="catalogFilter">
+                            <option value="all">All</option>
+                            <option value="available">Available</option>
+                            <option value="borrowed">Borrowed</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                        <select id="catalogSort">
+                            <option value="title">Sort by Title</option>
+                            <option value="author">Sort by Author</option>
+                            <option value="status">Sort by Status</option>
+                            <option value="createdAt">Sort by Date Added</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="openAddBook()">+ Add Book</button>
+                        <button class="btn btn-outline btn-sm" onclick="exportBooksCSV()">⬇ Export CSV</button>
+                        <button class="btn btn-outline btn-sm" onclick="importBooksCSV()">⬆ Import CSV</button>
+                    </div>
+                    <div class="table-wrap">
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th onclick="sortCatalog('title')">Title ↕</th>
+                                        <th onclick="sortCatalog('author')">Author</th>
+                                        <th onclick="sortCatalog('status')">Status</th>
+                                        <th>Tags</th>
+                                        <th>Borrowed By</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="catalogBody">
+                                    <tr><td colspan="6" class="text-center text-muted">No books in catalog.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== TRANSACTIONS ====== -->
+            <div class="page" id="page-transactions">
+                <div class="card">
+                    <div class="card-title">🔄 Transactions</div>
+                    <div class="search-bar">
+                        <input type="text" id="txSearch" placeholder="Search by book, student, @, #..." style="flex:2;" />
+                        <select id="txFilter">
+                            <option value="all">All</option>
+                            <option value="borrow">Borrow</option>
+                            <option value="return">Return</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="openBorrowReturn()">+ New Transaction</button>
+                    </div>
+                    <div class="table-wrap">
+                        <div class="table-scroll">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>Student</th>
+                                        <th>Type</th>
+                                        <th>Date</th>
+                                        <th>By</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="txBody">
+                                    <tr><td colspan="7" class="text-center text-muted">No transactions yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== REPORTS ====== -->
+            <div class="page" id="page-reports">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">📊 Borrowed vs Available</div>
+                        <canvas id="chartStatus" height="200"></canvas>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📈 Monthly Activity</div>
+                        <canvas id="chartMonthly" height="200"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📋 Full Catalog <span class="text-muted text-sm">(searchable & filterable)</span></div>
+                    <div class="search-bar">
+                        <input type="text" id="reportSearch" placeholder="Search catalog..." style="flex:2;" />
+                        <select id="reportFilter">
+                            <option value="all">All</option>
+                            <option value="available">Available</option>
+                            <option value="borrowed">Borrowed</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <div class="table-scroll" style="max-height:300px;">
+                            <table>
+                                <thead>
+                                    <tr><th>Title</th><th>Author</th><th>Status</th><th>Tags</th><th>Borrowed By</th></tr>
+                                </thead>
+                                <tbody id="reportBody">
+                                    <tr><td colspan="5" class="text-center text-muted">No data.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SETTINGS ====== -->
+            <div class="page" id="page-settings">
+                <div class="card">
+                    <div class="card-title">⚙️ Settings</div>
+                    <div class="settings-group">
+                        <div class="label">🔌 Supabase Connection</div>
+                        <div class="desc">Connect to Supabase for cloud sync. All data is also stored locally.</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Supabase URL</label>
+                                <input type="text" id="supabaseUrl" placeholder="https://your-project.supabase.co" />
+                            </div>
+                            <div class="form-group">
+                                <label>Supabase Anon Key</label>
+                                <input type="text" id="supabaseKey" placeholder="your-anon-key" />
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="connectSupabase()">🔗 Connect</button>
+                            <button class="btn btn-success" onclick="syncToSupabase()">⬆ Push to Supabase</button>
+                            <button class="btn btn-outline" onclick="loadFromSupabase()">⬇ Pull from Supabase</button>
+                            <span id="supabaseStatus" style="margin-left:auto;font-size:13px;color:var(--gray-500);"></span>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="label">📁 Data Management</div>
+                        <div class="desc">Export or import your library data as CSV.</div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn btn-outline" onclick="exportAllCSV()">📤 Export All CSV</button>
+                            <button class="btn btn-outline" onclick="importAllCSV()">📥 Import All CSV</button>
+                            <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑 Clear Local Data</button>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <div class="label">🏷 Archive Reasons</div>
+                        <div class="desc">Default reasons for archiving transactions.</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="reasonTags">
+                            <span class="tag">Accidental entry</span>
+                            <span class="tag">Typo</span>
+                            <span class="tag">Duplicate</span>
+                            <span class="tag">Wrong student</span>
+                            <span class="tag">Wrong book</span>
+                            <span class="tag">System error</span>
+                        </div>
+                        <div style="margin-top:8px;display:flex;gap:8px;">
+                            <input type="text" id="newReasonInput" placeholder="Add new reason..." style="flex:1;" />
+                            <button class="btn btn-sm btn-primary" onclick="addReason()">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /main -->
+    </div><!-- /app -->
+
+    <!-- ====== MODALS ====== -->
+    <!-- Scanner Modal -->
+    <div class="modal-overlay" id="scannerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="scannerTitle">📷 Scan QR Code</h3>
+                <button class="modal-close" onclick="closeScanner()">✕</button>
+            </div>
+            <div id="scannerContainer">
+                <div class="scanner-overlay"></div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="manualInput" placeholder="Or enter manually..." style="flex:1;" />
+                <button class="btn btn-primary btn-sm" onclick="manualSubmit()">Submit</button>
+            </div>
+            <div class="scanner-controls">
+                <button class="btn btn-sm btn-outline" onclick="toggleScanner()">⏸ Pause</button>
+                <button class="btn btn-sm btn-outline" onclick="closeScanner()">✕ Close</button>
+            </div>
+            <div id="scannerResult" style="margin-top:10px;font-weight:500;color:var(--primary);"></div>
+        </div>
+    </div>
+
+    <!-- Borrow/Return Modal -->
+    <div class="modal-overlay" id="borrowModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🔄 Borrow / Return</h3>
+                <button class="modal-close" onclick="closeBorrowReturn()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>📖 Book <span style="color:var(--danger);">*</span></label>
+                <div class="autocomplete-wrap">
+                    <input type="text" id="borrowBook" placeholder="Search book by title, @, #, or ISBN..." />
+                    <div class="autocomplete-list" id="bookAutocomplete"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>👤 Student <span style="color:var(--danger);">*</span></label>
+                <div class="autocomplete-wrap">
+                    <input type="text" id="borrowStudent" placeholder="Search by @, name, or class..." />
+                    <div class="autocomplete-list" id="studentAutocomplete"></div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Type <span style="color:var(--danger);">*</span></label>
+                    <select id="borrowType">
+                        <option value="borrow">📤 Borrow</option>
+                        <option value="return">📥 Return</option>
+                    </select>
+                </div>
+                <div class="form-group" id="archiveReasonGroup" style="display:none;">
+                    <label>Archive Reason</label>
+                    <div class="autocomplete-wrap">
+                        <input type="text" id="archiveReason" placeholder="Reason for archiving..." />
+                        <div class="autocomplete-list" id="reasonAutocomplete"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeBorrowReturn()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitBorrowReturn()">✅ Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Book Modal -->
+    <div class="modal-overlay" id="bookModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="bookModalTitle">📖 Add Book</h3>
+                <button class="modal-close" onclick="closeBookModal()">✕</button>
+            </div>
+            <input type="hidden" id="editBookId" />
+            <div class="form-group">
+                <label>Title <span style="color:var(--danger);">*</span></label>
+                <input type="text" id="bookTitle" placeholder="Book title" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" id="bookAuthor" placeholder="Author name" />
+                </div>
+                <div class="form-group">
+                    <label>ISBN (optional)</label>
+                    <input type="text" id="bookIsbn" placeholder="ISBN" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tags <span class="text-muted text-sm">(#tag1 #tag2)</span></label>
+                <input type="text" id="bookTags" placeholder="#fiction #science" />
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="bookStatus">
+                    <option value="available">Available</option>
+                    <option value="borrowed">Borrowed</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeBookModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveBook()">💾 Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  FIREBASE INIT
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
+        //  FIREBASE CONFIG (replace with your own)
+        // ========================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyA9s6HrqR-PZqV6v9TqL8lVJZ9fqK7mP1E",
-            authDomain: "school-library-8e6f9.firebaseapp.com",
-            projectId: "school-library-8e6f9",
-            storageBucket: "school-library-8e6f9.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef123456"
+            apiKey: "AIzaSyDummyKeyReplaceMe",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.firebasestorage.app",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
         };
+
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         //  STATE
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        let books = [];
-        let transactions = [];
-        let borrowers = []; // { id, name, class, qrCode? }
-        let currentUser = null;
-        let supabaseClient = null;
-        let supabaseConnected = false;
+        // ========================================================================
+        let state = {
+            books: [],
+            students: [],
+            transactions: [],
+            archiveReasons: ['Accidental entry', 'Typo', 'Duplicate', 'Wrong student', 'Wrong book', 'System error'],
+            currentUser: null,
+            supabaseClient: null,
+            supabaseConnected: false,
+            scannerInstance: null,
+            scannerActive: false,
+            scannerMode: 'book', // 'book' | 'student'
+            scannerCallback: null,
+            catalogSortField: 'title',
+            catalogSortAsc: true,
+            borrowBookId: null,
+            borrowStudentId: null,
+        };
 
-        // QR scanner instances
-        let bookScanner = null;
-        let borrowerScanner = null;
+        // ========================================================================
+        //  TOAST
+        // ========================================================================
+        function toast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.textContent = message;
+            container.appendChild(el);
+            setTimeout(() => { el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300); }, 3500);
+        }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  LOCAL STORAGE HELPERS
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
+        //  DATA PERSISTENCE (LocalStorage)
+        // ========================================================================
+        function saveData() {
+            try {
+                localStorage.setItem('lib_books', JSON.stringify(state.books));
+                localStorage.setItem('lib_students', JSON.stringify(state.students));
+                localStorage.setItem('lib_transactions', JSON.stringify(state.transactions));
+                localStorage.setItem('lib_reasons', JSON.stringify(state.archiveReasons));
+                localStorage.setItem('lib_supabase_url', document.getElementById('supabaseUrl').value || '');
+                localStorage.setItem('lib_supabase_key', document.getElementById('supabaseKey').value || '');
+            } catch (e) { console.warn('Save error', e); }
+        }
+
         function loadData() {
             try {
                 const b = localStorage.getItem('lib_books');
+                const s = localStorage.getItem('lib_students');
                 const t = localStorage.getItem('lib_transactions');
-                const br = localStorage.getItem('lib_borrowers');
-                books = b ? JSON.parse(b) : [];
-                transactions = t ? JSON.parse(t) : [];
-                borrowers = br ? JSON.parse(br) : [];
-            } catch (e) { books = [];
-                transactions = [];
-                borrowers = []; }
-            // ensure each book has a status
-            books = books.map(b => {
-                if (!b.status) b.status = 'available';
-                return b;
-            });
-            // ensure each transaction has a type
-            transactions = transactions.map(t => {
-                if (!t.type) t.type = 'borrow';
-                return t;
-            });
-            // sync status from transactions
-            syncBookStatusFromTransactions();
-            saveData();
+                const r = localStorage.getItem('lib_reasons');
+                const url = localStorage.getItem('lib_supabase_url');
+                const key = localStorage.getItem('lib_supabase_key');
+                if (b) state.books = JSON.parse(b);
+                if (s) state.students = JSON.parse(s);
+                if (t) state.transactions = JSON.parse(t);
+                if (r) state.archiveReasons = JSON.parse(r);
+                if (url) document.getElementById('supabaseUrl').value = url;
+                if (key) document.getElementById('supabaseKey').value = key;
+            } catch (e) { console.warn('Load error', e); }
         }
 
-        function saveData() {
-            localStorage.setItem('lib_books', JSON.stringify(books));
-            localStorage.setItem('lib_transactions', JSON.stringify(transactions));
-            localStorage.setItem('lib_borrowers', JSON.stringify(borrowers));
+        // ========================================================================
+        //  SUPABASE
+        // ========================================================================
+        async function connectSupabase() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+            if (!url || !key) { toast('Please enter both Supabase URL and Anon Key.', 'error'); return; }
+            try {
+                const { createClient } = supabase;
+                const client = createClient(url, key);
+                // Test connection
+                const { data, error } = await client.from('books').select('count', { count: 'exact', head: true });
+                if (error) throw error;
+                state.supabaseClient = client;
+                state.supabaseConnected = true;
+                localStorage.setItem('lib_supabase_url', url);
+                localStorage.setItem('lib_supabase_key', key);
+                updateStatusBadge();
+                toast('✅ Connected to Supabase!', 'success');
+                document.getElementById('supabaseStatus').textContent = '✅ Connected';
+            } catch (e) {
+                console.error(e);
+                state.supabaseConnected = false;
+                updateStatusBadge();
+                toast('❌ Failed to connect: ' + e.message, 'error');
+                document.getElementById('supabaseStatus').textContent = '❌ Error';
+            }
         }
 
-        function syncBookStatusFromTransactions() {
-            // For each borrowed transaction, ensure the book is marked borrowed
-            const borrowedIds = new Set();
-            transactions.forEach(t => {
-                if (t.type === 'borrow' && !t.returnDate) {
-                    borrowedIds.add(t.bookId);
+        async function syncToSupabase() {
+            if (!state.supabaseClient) { toast('Please connect to Supabase first.', 'error'); return; }
+            try {
+                const sb = state.supabaseClient;
+                // Upsert books
+                for (const book of state.books) {
+                    const { error } = await sb.from('books').upsert(book, { onConflict: 'id' });
+                    if (error) throw error;
                 }
-            });
-            books.forEach(b => {
-                if (borrowedIds.has(b.id)) {
-                    b.status = 'borrowed';
-                    // find borrower info
-                    const tx = transactions.find(t => t.bookId === b.id && t.type === 'borrow' && !t.returnDate);
-                    if (tx) {
-                        b.borrowerId = tx.borrowerId;
-                        b.borrowerName = tx.borrowerName || 'Unknown';
-                        b.borrowerClass = tx.borrowerClass || '';
-                        b.borrowDate = tx.date;
-                        b.dueDate = tx.dueDate || '';
-                    }
-                } else {
-                    b.status = 'available';
-                    b.borrowerId = null;
-                    b.borrowerName = null;
-                    b.borrowerClass = null;
-                    b.borrowDate = null;
-                    b.dueDate = null;
+                // Upsert students
+                for (const student of state.students) {
+                    const { error } = await sb.from('students').upsert(student, { onConflict: 'id' });
+                    if (error) throw error;
                 }
-            });
+                // Upsert transactions
+                for (const tx of state.transactions) {
+                    const { error } = await sb.from('transactions').upsert(tx, { onConflict: 'id' });
+                    if (error) throw error;
+                }
+                toast('✅ Data pushed to Supabase successfully!', 'success');
+            } catch (e) {
+                console.error(e);
+                toast('❌ Push failed: ' + e.message, 'error');
+            }
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function loadFromSupabase() {
+            if (!state.supabaseClient) { toast('Please connect to Supabase first.', 'error'); return; }
+            try {
+                const sb = state.supabaseClient;
+                const { data: books, error: e1 } = await sb.from('books').select('*');
+                if (e1) throw e1;
+                const { data: students, error: e2 } = await sb.from('students').select('*');
+                if (e2) throw e2;
+                const { data: transactions, error: e3 } = await sb.from('transactions').select('*');
+                if (e3) throw e3;
+                if (books) state.books = books;
+                if (students) state.students = students;
+                if (transactions) state.transactions = transactions;
+                saveData();
+                renderAll();
+                toast('✅ Data pulled from Supabase!', 'success');
+            } catch (e) {
+                console.error(e);
+                toast('❌ Pull failed: ' + e.message, 'error');
+            }
+        }
+
+        // ========================================================================
+        //  STATUS BADGE
+        // ========================================================================
+        function updateStatusBadge() {
+            const badge = document.getElementById('statusBadge');
+            const text = document.getElementById('statusText');
+            if (state.supabaseConnected) {
+                badge.className = 'status-badge online';
+                text.textContent = 'Online';
+            } else {
+                badge.className = 'status-badge offline';
+                text.textContent = 'Offline';
+            }
+        }
+
+        // ========================================================================
         //  AUTH
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function showLogin() {
-            document.getElementById('mainApp').style.display = 'none';
-            document.querySelector('.sidebar').style.display = 'none';
-            const loginHTML = `
-          <div class="login-page">
-            <div class="login-card">
-              <h1>📚 LibManager</h1>
-              <p class="sub">School Library Management</p>
-              <button class="google-btn" id="googleLoginBtn">
-                <svg width="24" height="24" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-                Sign in with Google
-              </button>
-            </div>
-          </div>
-        `;
-            document.body.innerHTML = loginHTML;
-            document.getElementById('googleLoginBtn').addEventListener('click', () => {
-                auth.signInWithPopup(provider);
-            });
-        }
-
+        // ========================================================================
         auth.onAuthStateChanged(user => {
             if (user) {
-                currentUser = user;
-                document.querySelector('.sidebar').style.display = 'flex';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('userAvatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=U';
-                document.getElementById('userName').textContent = user.displayName || 'User';
+                state.currentUser = user;
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').classList.add('visible');
+                document.getElementById('userNameDisplay').textContent = user.displayName || user.email || 'User';
+                document.getElementById('userAvatar').textContent = (user.displayName || user.email || 'U')[0].toUpperCase();
                 loadData();
+                // Try auto-connect Supabase
+                const url = document.getElementById('supabaseUrl').value.trim();
+                const key = document.getElementById('supabaseKey').value.trim();
+                if (url && key) {
+                    connectSupabase().catch(() => {});
+                }
                 renderAll();
-                checkSupabaseConfig();
-                // Remove login page if present
-                const lp = document.querySelector('.login-page');
-                if (lp) lp.remove();
+                toast('👋 Welcome, ' + (user.displayName || 'Librarian') + '!', 'success');
             } else {
-                currentUser = null;
-                showLogin();
+                state.currentUser = null;
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('app').classList.remove('visible');
             }
+        });
+
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
+            auth.signInWithPopup(provider).catch(e => toast('Login error: ' + e.message, 'error'));
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            auth.signOut();
-        });
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  NAVIGATION
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        const pageTitles = {
-            dashboard: 'Dashboard',
-            catalog: 'Catalog',
-            'scan-book': 'Scan Book QR',
-            'scan-borrower': 'Scan Borrower QR',
-            reports: 'Reports',
-            settings: 'Settings'
-        };
-
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                const page = link.dataset.page;
-                navigateTo(page);
+            auth.signOut().then(() => {
+                toast('Signed out.', 'info');
             });
         });
 
-        function navigateTo(page) {
-            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-            document.querySelector(`.sidebar-nav a[data-page="${page}"]`)?.classList.add('active');
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${page}`)?.classList.add('active');
-            document.getElementById('pageTitle').textContent = pageTitles[page] || page;
-            // Close mobile sidebar
-            document.getElementById('sidebar').classList.remove('open');
-            if (page === 'dashboard') renderDashboard();
-            if (page === 'catalog') renderCatalog();
-            if (page === 'reports') renderReports();
-            if (page === 'scan-book') initBookScanner();
-            if (page === 'scan-borrower') initBorrowerScanner();
-            if (page === 'settings') renderSettings();
-        }
-
-        document.getElementById('mobileToggle').addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('open');
+        // ========================================================================
+        //  NAVIGATION
+        // ========================================================================
+        document.querySelectorAll('#mainNav button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const page = btn.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-' + page).classList.add('active');
+                // Render charts if reports
+                if (page === 'reports') renderReports();
+                if (page === 'catalog') renderCatalog();
+                if (page === 'transactions') renderTransactions();
+                if (page === 'dashboard') renderDashboard();
+            });
         });
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         //  RENDER FUNCTIONS
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         function renderAll() {
             renderDashboard();
             renderCatalog();
+            renderTransactions();
             renderReports();
-            checkSupabaseStatus();
+            renderStudentsQuick();
+            updateStatusBadge();
         }
 
         function renderDashboard() {
-            const total = books.length;
-            const available = books.filter(b => b.status === 'available').length;
-            const borrowed = books.filter(b => b.status === 'borrowed').length;
-            const borrowerSet = new Set(transactions.filter(t => t.type === 'borrow' && !t.returnDate).map(t => t.borrowerId));
-            document.getElementById('statTotal').textContent = total;
-            document.getElementById('statAvailable').textContent = available;
+            const total = state.books.length;
+            const borrowed = state.books.filter(b => b.status === 'borrowed').length;
+            const available = state.books.filter(b => b.status === 'available').length;
+            document.getElementById('statBooks').textContent = total;
             document.getElementById('statBorrowed').textContent = borrowed;
-            document.getElementById('statBorrowers').textContent = borrowerSet.size;
-
+            document.getElementById('statAvailable').textContent = available;
+            document.getElementById('studentCount').textContent = `(${state.students.length})`;
             // Recent activity
-            const recent = transactions.slice(-6).reverse();
+            const recent = state.transactions.slice(-8).reverse();
             const container = document.getElementById('recentActivity');
             if (recent.length === 0) {
-                container.innerHTML = '<p class="text-muted">No recent activity.</p>';
+                container.innerHTML = '<div class="empty-state"><div class="icon">📭</div>No recent activity</div>';
             } else {
-                container.innerHTML = recent.map(t => {
-                    const icon = t.type === 'borrow' ? '📖' : '🔄';
-                    const label = t.type === 'borrow' ? 'Borrowed' : 'Returned';
-                    return `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #f1f5f9;">
-                <span>${icon} <strong>${t.bookTitle || 'Book'}</strong> ${label} by ${t.borrowerName || 'Unknown'}</span>
-                <span class="text-muted" style="font-size:0.8rem;">${new Date(t.date).toLocaleDateString()}</span>
-              </div>`;
+                container.innerHTML = recent.map(tx => {
+                    const book = state.books.find(b => b.id === tx.bookId);
+                    const student = state.students.find(s => s.id === tx.studentId);
+                    const icon = tx.type === 'borrow' ? '📤' : '📥';
+                    return `<div style="padding:6px 0;border-bottom:1px solid var(--gray-100);font-size:13px;">
+                                ${icon} <strong>${book ? book.title : 'Unknown'}</strong>
+                                → ${student ? student.name : 'Unknown'}
+                                <span class="text-muted text-sm">(${tx.type})</span>
+                                <span class="text-muted text-sm" style="float:right;">${new Date(tx.createdAt).toLocaleString()}</span>
+                            </div>`;
                 }).join('');
+            }
+            renderStudentsQuick();
+        }
+
+        function renderStudentsQuick() {
+            const container = document.getElementById('studentQuickList');
+            const search = document.getElementById('studentQuickSearch').value.toLowerCase();
+            let list = state.students;
+            if (search) {
+                list = list.filter(s =>
+                    s.id.toLowerCase().includes(search) ||
+                    s.name.toLowerCase().includes(search) ||
+                    (s.class && s.class.toLowerCase().includes(search))
+                );
+            }
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-state text-sm">No students found. Import a CSV.</div>';
+                return;
+            }
+            container.innerHTML = list.slice(0, 20).map(s =>
+                `<div style="padding:4px 0;border-bottom:1px solid var(--gray-100);font-size:13px;display:flex;justify-content:space-between;">
+                            <span><span class="tag tag-@">@${s.id}</span> ${s.name}</span>
+                            <span class="text-muted text-sm">${s.class || ''}</span>
+                        </div>`
+            ).join('');
+            if (list.length > 20) {
+                container.innerHTML += `<div class="text-muted text-sm" style="padding:4px 0;">+ ${list.length - 20} more...</div>`;
             }
         }
 
+        document.getElementById('studentQuickSearch').addEventListener('input', renderStudentsQuick);
+
+        // ========================================================================
+        //  CATALOG
+        // ========================================================================
         function renderCatalog() {
             const search = document.getElementById('catalogSearch').value.toLowerCase();
             const filter = document.getElementById('catalogFilter').value;
             const sort = document.getElementById('catalogSort').value;
 
-            let list = [...books];
-            if (search) {
-                list = list.filter(b => b.title.toLowerCase().includes(search) ||
-                    (b.isbn && b.isbn.toLowerCase().includes(search)) ||
-                    (b.borrowerName && b.borrowerName.toLowerCase().includes(search)));
-            }
-            if (filter !== 'all') {
-                list = list.filter(b => b.status === filter);
-            }
-            if (sort === 'title') list.sort((a, b) => a.title.localeCompare(b.title));
-            else if (sort === 'status') list.sort((a, b) => a.status.localeCompare(b.status));
-            else if (sort === 'borrower') list.sort((a, b) => (a.borrowerName || '').localeCompare(b.borrowerName || ''));
+            let list = state.books.filter(b => {
+                if (filter !== 'all' && b.status !== filter) return false;
+                if (search) {
+                    const match = b.title.toLowerCase().includes(search) ||
+                        (b.author || '').toLowerCase().includes(search) ||
+                        (b.isbn || '').toLowerCase().includes(search) ||
+                        (b.tags || []).some(t => t.toLowerCase().includes(search)) ||
+                        (b.borrowedBy || '').toLowerCase().includes(search);
+                    if (!match) return false;
+                }
+                return true;
+            });
+
+            // Sort
+            list.sort((a, b) => {
+                let va = a[sort] || '';
+                let vb = b[sort] || '';
+                if (sort === 'status') { va = a.status || '';
+                    vb = b.status || ''; }
+                if (sort === 'title') { va = a.title || '';
+                    vb = b.title || ''; }
+                if (sort === 'author') { va = a.author || '';
+                    vb = b.author || ''; }
+                if (sort === 'createdAt') { va = new Date(a.createdAt || 0);
+                    vb = new Date(b.createdAt || 0); }
+                if (va < vb) return -1;
+                if (va > vb) return 1;
+                return 0;
+            });
 
             const tbody = document.getElementById('catalogBody');
             if (list.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-book"></i><p>No books found.</p></div></td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No books found.</td></tr>';
                 return;
             }
-            tbody.innerHTML = list.map((b, i) => `
-            <tr>
-              <td>${i+1}</td>
-              <td><strong>${b.title}</strong> ${b.qrCode ? `<span class="text-muted" style="font-size:0.7rem;"><i class="fas fa-qrcode"></i></span>` : ''}</td>
-              <td>${b.isbn || '—'}</td>
-              <td><span class="badge ${b.status}">${b.status}</span></td>
-              <td>${b.borrowerName || '—'}${b.borrowerClass ? ` <span class="text-muted">(${b.borrowerClass})</span>` : ''}</td>
-              <td>
-                <button class="action-btn" onclick="editBook('${b.id}')" title="Edit"><i class="fas fa-edit"></i></button>
-                <button class="action-btn danger" onclick="deleteBook('${b.id}')" title="Delete"><i class="fas fa-trash"></i></button>
-                ${b.status === 'available' ? `<button class="action-btn success" onclick="quickBorrow('${b.id}')" title="Borrow"><i class="fas fa-hand-holding"></i></button>` : `<button class="action-btn warning" onclick="quickReturn('${b.id}')" title="Return"><i class="fas fa-undo-alt"></i></button>`}
-              </td>
-            </tr>
-          `).join('');
+            tbody.innerHTML = list.map(b => {
+                const statusBadge = b.status === 'available' ? 'badge-available' :
+                    b.status === 'borrowed' ? 'badge-borrowed' : 'badge-archived';
+                const tags = (b.tags || []).map(t => `<span class="tag tag-#">#${t}</span>`).join(' ');
+                const student = b.borrowedBy ? state.students.find(s => s.id === b.borrowedBy) : null;
+                return `<tr>
+                            <td><strong>${b.title}</strong>${b.isbn ? `<br><span class="text-muted text-sm">ISBN: ${b.isbn}</span>` : ''}</td>
+                            <td>${b.author || '—'}</td>
+                            <td><span class="badge ${statusBadge}">${b.status}</span></td>
+                            <td>${tags || '—'}</td>
+                            <td>${student ? `${student.name} (@${student.id})` : '—'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline" onclick="editBook('${b.id}')">✏️</button>
+                                <button class="btn btn-sm btn-danger" onclick="archiveBook('${b.id}')">📦</button>
+                            </td>
+                        </tr>`;
+            }).join('');
         }
+
+        document.getElementById('catalogSearch').addEventListener('input', renderCatalog);
+        document.getElementById('catalogFilter').addEventListener('change', renderCatalog);
+        document.getElementById('catalogSort').addEventListener('change', renderCatalog);
+
+        function sortCatalog(field) {
+            if (state.catalogSortField === field) {
+                state.catalogSortAsc = !state.catalogSortAsc;
+            } else {
+                state.catalogSortField = field;
+                state.catalogSortAsc = true;
+            }
+            renderCatalog();
+        }
+
+        // ========================================================================
+        //  TRANSACTIONS
+        // ========================================================================
+        function renderTransactions() {
+            const search = document.getElementById('txSearch').value.toLowerCase();
+            const filter = document.getElementById('txFilter').value;
+
+            let list = state.transactions.filter(tx => {
+                if (filter !== 'all' && tx.type !== filter && !(filter === 'archived' && tx.archived)) return false;
+                if (filter === 'archived' && !tx.archived) return false;
+                if (search) {
+                    const book = state.books.find(b => b.id === tx.bookId);
+                    const student = state.students.find(s => s.id === tx.studentId);
+                    const match = (book ? book.title : '').toLowerCase().includes(search) ||
+                        (student ? student.name : '').toLowerCase().includes(search) ||
+                        (student ? student.id : '').toLowerCase().includes(search) ||
+                        (tx.id || '').toLowerCase().includes(search);
+                    if (!match) return false;
+                }
+                return true;
+            });
+
+            list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            const tbody = document.getElementById('txBody');
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No transactions.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(tx => {
+                const book = state.books.find(b => b.id === tx.bookId);
+                const student = state.students.find(s => s.id === tx.studentId);
+                const icon = tx.type === 'borrow' ? '📤' : '📥';
+                const status = tx.archived ? 'Archived' : 'Active';
+                const statusBadge = tx.archived ? 'badge-archived' : 'badge-available';
+                return `<tr>
+                            <td>${book ? book.title : '❌ Deleted'}</td>
+                            <td>${student ? `${student.name} (@${student.id})` : '❌ Unknown'}</td>
+                            <td>${icon} ${tx.type}</td>
+                            <td>${new Date(tx.createdAt).toLocaleString()}</td>
+                            <td>${tx.createdBy || 'system'}</td>
+                            <td><span class="badge ${statusBadge}">${status}</span></td>
+                            <td>
+                                ${!tx.archived ? `<button class="btn btn-sm btn-warning" onclick="archiveTransaction('${tx.id}')">📦 Archive</button>` : ''}
+                                <button class="btn btn-sm btn-outline" onclick="viewRevision('${tx.id}')">📜</button>
+                            </td>
+                        </tr>`;
+            }).join('');
+        }
+
+        document.getElementById('txSearch').addEventListener('input', renderTransactions);
+        document.getElementById('txFilter').addEventListener('change', renderTransactions);
+
+        // ========================================================================
+        //  REPORTS
+        // ========================================================================
+        let chartStatus = null;
+        let chartMonthly = null;
 
         function renderReports() {
+            // Status chart
+            const available = state.books.filter(b => b.status === 'available').length;
+            const borrowed = state.books.filter(b => b.status === 'borrowed').length;
+            const archived = state.books.filter(b => b.status === 'archived').length;
+
+            const ctx1 = document.getElementById('chartStatus').getContext('2d');
+            if (chartStatus) chartStatus.destroy();
+            chartStatus = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Available', 'Borrowed', 'Archived'],
+                    datasets: [{ data: [available, borrowed, archived], backgroundColor: ['#22c55e', '#f59e0b',
+                            '#ef4444'
+                        ] }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // Monthly chart
+            const months = {};
+            state.transactions.forEach(tx => {
+                const d = new Date(tx.createdAt);
+                const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+                months[key] = (months[key] || 0) + 1;
+            });
+            const sorted = Object.keys(months).sort();
+            const ctx2 = document.getElementById('chartMonthly').getContext('2d');
+            if (chartMonthly) chartMonthly.destroy();
+            chartMonthly = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: sorted,
+                    datasets: [{ label: 'Transactions', data: sorted.map(k => months[k]), backgroundColor: '#4f46e5' }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            // Report table
             const search = document.getElementById('reportSearch').value.toLowerCase();
             const filter = document.getElementById('reportFilter').value;
-
-            let list = [...books];
-            if (search) {
-                list = list.filter(b => b.title.toLowerCase().includes(search) ||
-                    (b.isbn && b.isbn.toLowerCase().includes(search)) ||
-                    (b.borrowerName && b.borrowerName.toLowerCase().includes(search)));
-            }
-            if (filter !== 'all') {
-                list = list.filter(b => b.status === filter);
-            }
-
+            let list = state.books.filter(b => {
+                if (filter !== 'all' && b.status !== filter) return false;
+                if (search) {
+                    const match = b.title.toLowerCase().includes(search) ||
+                        (b.author || '').toLowerCase().includes(search) ||
+                        (b.tags || []).some(t => t.toLowerCase().includes(search));
+                    if (!match) return false;
+                }
+                return true;
+            });
             const tbody = document.getElementById('reportBody');
             if (list.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-file-alt"></i><p>No records.</p></div></td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No data.</td></tr>';
                 return;
             }
-            tbody.innerHTML = list.map((b, i) => `
-            <tr>
-              <td>${i+1}</td>
-              <td><strong>${b.title}</strong></td>
-              <td>${b.isbn || '—'}</td>
-              <td><span class="badge ${b.status}">${b.status}</span></td>
-              <td>${b.borrowerName || '—'}</td>
-              <td>${b.dueDate ? new Date(b.dueDate).toLocaleDateString() : '—'}</td>
-            </tr>
-          `).join('');
+            tbody.innerHTML = list.map(b => {
+                const statusBadge = b.status === 'available' ? 'badge-available' :
+                    b.status === 'borrowed' ? 'badge-borrowed' : 'badge-archived';
+                const tags = (b.tags || []).map(t => `<span class="tag tag-#">#${t}</span>`).join(' ');
+                const student = b.borrowedBy ? state.students.find(s => s.id === b.borrowedBy) : null;
+                return `<tr>
+                            <td><strong>${b.title}</strong></td>
+                            <td>${b.author || '—'}</td>
+                            <td><span class="badge ${statusBadge}">${b.status}</span></td>
+                            <td>${tags || '—'}</td>
+                            <td>${student ? `${student.name} (@${student.id})` : '—'}</td>
+                        </tr>`;
+            }).join('');
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        document.getElementById('reportSearch').addEventListener('input', renderReports);
+        document.getElementById('reportFilter').addEventListener('change', renderReports);
+
+        // ========================================================================
         //  BOOK CRUD
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
-
+        // ========================================================================
         function openAddBook() {
-            showModal(`
-            <h2><i class="fas fa-plus"></i> Add Book</h2>
-            <p class="sub">Enter book details. Title is mandatory.</p>
-            <label>Title *</label>
-            <input type="text" id="bookTitle" placeholder="Book title" />
-            <label>ISBN (optional)</label>
-            <input type="text" id="bookIsbn" placeholder="ISBN" />
-            <label>QR Code (optional)</label>
-            <input type="text" id="bookQr" placeholder="QR code value" />
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-              <button class="btn-primary" onclick="addBookFromForm()">Add Book</button>
-            </div>
-          `);
-            setTimeout(() => document.getElementById('bookTitle')?.focus(), 100);
-        }
-
-        function addBookFromForm() {
-            const title = document.getElementById('bookTitle').value.trim();
-            if (!title) { toast('Please enter a book title.', 'error'); return; }
-            const isbn = document.getElementById('bookIsbn').value.trim();
-            const qr = document.getElementById('bookQr').value.trim();
-            const book = {
-                id: generateId(),
-                title,
-                isbn: isbn || '',
-                qrCode: qr || '',
-                status: 'available',
-                borrowerId: null,
-                borrowerName: null,
-                borrowerClass: null,
-                borrowDate: null,
-                dueDate: null,
-                createdAt: new Date().toISOString()
-            };
-            books.push(book);
-            saveData();
-            closeModal();
-            renderAll();
-            toast(`Book "${title}" added successfully!`, 'success');
+            document.getElementById('editBookId').value = '';
+            document.getElementById('bookModalTitle').textContent = '📖 Add Book';
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookAuthor').value = '';
+            document.getElementById('bookIsbn').value = '';
+            document.getElementById('bookTags').value = '';
+            document.getElementById('bookStatus').value = 'available';
+            document.getElementById('bookModal').classList.add('open');
         }
 
         function editBook(id) {
-            const book = books.find(b => b.id === id);
-            if (!book) return;
-            showModal(`
-            <h2><i class="fas fa-edit"></i> Edit Book</h2>
-            <p class="sub">Update book details.</p>
-            <label>Title *</label>
-            <input type="text" id="editBookTitle" value="${book.title}" />
-            <label>ISBN</label>
-            <input type="text" id="editBookIsbn" value="${book.isbn || ''}" />
-            <label>QR Code</label>
-            <input type="text" id="editBookQr" value="${book.qrCode || ''}" />
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-              <button class="btn-primary" onclick="saveEditBook('${id}')">Save</button>
-            </div>
-          `);
+            const book = state.books.find(b => b.id === id);
+            if (!book) { toast('Book not found.', 'error'); return; }
+            document.getElementById('editBookId').value = id;
+            document.getElementById('bookModalTitle').textContent = '✏️ Edit Book';
+            document.getElementById('bookTitle').value = book.title;
+            document.getElementById('bookAuthor').value = book.author || '';
+            document.getElementById('bookIsbn').value = book.isbn || '';
+            document.getElementById('bookTags').value = (book.tags || []).join(' ');
+            document.getElementById('bookStatus').value = book.status || 'available';
+            document.getElementById('bookModal').classList.add('open');
         }
 
-        function saveEditBook(id) {
-            const book = books.find(b => b.id === id);
-            if (!book) return;
-            const title = document.getElementById('editBookTitle').value.trim();
+        function closeBookModal() {
+            document.getElementById('bookModal').classList.remove('open');
+        }
+
+        function saveBook() {
+            const id = document.getElementById('editBookId').value;
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const isbn = document.getElementById('bookIsbn').value.trim();
+            const tags = document.getElementById('bookTags').value.trim().split(/\s+/).filter(t => t.startsWith('#')).map(t =>
+            t.substring(1));
+            const status = document.getElementById('bookStatus').value;
+
             if (!title) { toast('Title is required.', 'error'); return; }
-            book.title = title;
-            book.isbn = document.getElementById('editBookIsbn').value.trim();
-            book.qrCode = document.getElementById('editBookQr').value.trim();
-            saveData();
-            closeModal();
-            renderAll();
-            toast('Book updated!', 'success');
-        }
 
-        function deleteBook(id) {
-            if (!confirm('Delete this book permanently?')) return;
-            books = books.filter(b => b.id !== id);
-            transactions = transactions.filter(t => t.bookId !== id);
-            saveData();
-            renderAll();
-            toast('Book deleted.', 'warning');
-        }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  BORROW / RETURN
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function openBorrowForm(bookId = null) {
-            const bookOptions = books.filter(b => b.status === 'available')
-                .map(b => `<option value="${b.id}">${b.title}</option>`).join('');
-            showModal(`
-            <h2><i class="fas fa-hand-holding"></i> Borrow Book</h2>
-            <p class="sub">Select a book and borrower.</p>
-            <label>Book *</label>
-            <select id="borrowBookSelect">${bookOptions || '<option value="">No available books</option>'}</select>
-            <label>Borrower Name *</label>
-            <input type="text" id="borrowerName" placeholder="Student name" />
-            <label>Class</label>
-            <input type="text" id="borrowerClass" placeholder="Class (e.g. 10-A)" />
-            <label>Borrower ID (optional)</label>
-            <input type="text" id="borrowerId" placeholder="Admission number" />
-            <label>Due Date (optional)</label>
-            <input type="date" id="borrowDueDate" />
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-              <button class="btn-success" onclick="confirmBorrow()">Confirm Borrow</button>
-            </div>
-          `);
-            if (bookId) {
-                const sel = document.getElementById('borrowBookSelect');
-                if (sel) sel.value = bookId;
+            if (id) {
+                // Edit
+                const book = state.books.find(b => b.id === id);
+                if (book) {
+                    book.title = title;
+                    book.author = author;
+                    book.isbn = isbn;
+                    book.tags = tags;
+                    book.status = status;
+                    book.updatedAt = new Date().toISOString();
+                    // Revision history
+                    book.revisions = book.revisions || [];
+                    book.revisions.push({ action: 'edit', reason: 'Edited book details', user: state.currentUser?.email ||
+                            'system', timestamp: new Date().toISOString() });
+                    toast('✅ Book updated.', 'success');
+                }
+            } else {
+                // Add
+                const newBook = {
+                    id: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                    title,
+                    author,
+                    isbn,
+                    tags,
+                    status,
+                    borrowedBy: null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    revisions: [{ action: 'create', reason: 'Book added', user: state.currentUser?.email || 'system',
+                        timestamp: new Date().toISOString() }]
+                };
+                state.books.push(newBook);
+                toast('✅ Book added.', 'success');
             }
-            setTimeout(() => document.getElementById('borrowerName')?.focus(), 100);
+            saveData();
+            closeBookModal();
+            renderAll();
         }
 
-        function confirmBorrow() {
-            const bookId = document.getElementById('borrowBookSelect').value;
-            const name = document.getElementById('borrowerName').value.trim();
-            const cls = document.getElementById('borrowerClass').value.trim();
-            const borrowerId = document.getElementById('borrowerId').value.trim() || generateId();
-            const dueDate = document.getElementById('borrowDueDate').value;
-
-            if (!bookId) { toast('Please select a book.', 'error'); return; }
-            if (!name) { toast('Please enter borrower name.', 'error'); return; }
-
-            const book = books.find(b => b.id === bookId);
+        function archiveBook(id) {
+            const book = state.books.find(b => b.id === id);
             if (!book) { toast('Book not found.', 'error'); return; }
-            if (book.status === 'borrowed') { toast('Book is already borrowed.', 'error'); return; }
-
-            // Add borrower to list
-            if (!borrowers.find(b => b.id === borrowerId)) {
-                borrowers.push({ id: borrowerId, name, class: cls, qrCode: '' });
-            }
-
-            book.status = 'borrowed';
-            book.borrowerId = borrowerId;
-            book.borrowerName = name;
-            book.borrowerClass = cls;
-            book.borrowDate = new Date().toISOString();
-            book.dueDate = dueDate || '';
-
-            const tx = {
-                id: generateId(),
-                bookId: book.id,
-                bookTitle: book.title,
-                borrowerId,
-                borrowerName: name,
-                borrowerClass: cls,
-                type: 'borrow',
-                date: new Date().toISOString(),
-                dueDate: dueDate || '',
-                returnDate: null
-            };
-            transactions.push(tx);
+            const reason = prompt('Archive reason:', 'Duplicate / no longer in use');
+            if (reason === null) return;
+            book.status = 'archived';
+            book.updatedAt = new Date().toISOString();
+            book.revisions = book.revisions || [];
+            book.revisions.push({ action: 'archive', reason: reason || 'Archived', user: state.currentUser?.email ||
+                    'system', timestamp: new Date().toISOString() });
             saveData();
-            closeModal();
             renderAll();
-            toast(`"${book.title}" borrowed by ${name}!`, 'success');
+            toast('📦 Book archived.', 'info');
         }
 
-        function openReturnForm(bookId = null) {
-            const borrowedBooks = books.filter(b => b.status === 'borrowed')
-                .map(b => `<option value="${b.id}">${b.title} (${b.borrowerName || 'Unknown'})</option>`).join('');
-            showModal(`
-            <h2><i class="fas fa-undo-alt"></i> Return Book</h2>
-            <p class="sub">Select a borrowed book to return.</p>
-            <label>Book *</label>
-            <select id="returnBookSelect">${borrowedBooks || '<option value="">No borrowed books</option>'}</select>
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-              <button class="btn-success" onclick="confirmReturn()">Confirm Return</button>
-            </div>
-          `);
-            if (bookId) {
-                const sel = document.getElementById('returnBookSelect');
-                if (sel) sel.value = bookId;
-            }
-        }
-
-        function confirmReturn() {
-            const bookId = document.getElementById('returnBookSelect').value;
-            if (!bookId) { toast('Please select a book.', 'error'); return; }
-
-            const book = books.find(b => b.id === bookId);
-            if (!book) { toast('Book not found.', 'error'); return; }
-            if (book.status !== 'borrowed') { toast('Book is not borrowed.', 'error'); return; }
-
-            // Find the active borrow transaction
-            const tx = transactions.find(t => t.bookId === bookId && t.type === 'borrow' && !t.returnDate);
-            if (tx) {
-                tx.returnDate = new Date().toISOString();
-                tx.type = 'return';
-            }
-
-            book.status = 'available';
-            book.borrowerId = null;
-            book.borrowerName = null;
-            book.borrowerClass = null;
-            book.borrowDate = null;
-            book.dueDate = null;
-
-            saveData();
-            closeModal();
-            renderAll();
-            toast(`"${book.title}" returned successfully!`, 'success');
-        }
-
-        function quickBorrow(bookId) { openBorrowForm(bookId); }
-
-        function quickReturn(bookId) { openReturnForm(bookId); }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  QR SCANNING - BOOK
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        let bookScannerRunning = false;
-
-        function initBookScanner() {
-            if (bookScannerRunning) return;
-            const container = document.getElementById('bookQrReader');
-            container.innerHTML = '';
-            const hint = document.createElement('div');
-            hint.className = 'scan-hint';
-            hint.innerHTML = '<i class="fas fa-camera"></i><p>Loading camera...</p>';
-            container.appendChild(hint);
-
-            try {
-                bookScanner = new Html5Qrcode("bookQrReader");
-                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-                bookScanner.start({ facingMode: "environment" }, config, onBookScanSuccess, onBookScanError);
-                bookScannerRunning = true;
-                document.getElementById('bookScanResult').textContent = '📷 Scanning...';
-            } catch (e) {
-                document.getElementById('bookScanResult').textContent = '❌ Camera error: ' + e.message;
-                hint.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Could not access camera. Please allow camera permissions.</p>';
-            }
-        }
-
-        function onBookScanSuccess(decodedText) {
-            document.getElementById('bookScanResult').textContent = `✅ Scanned: ${decodedText}`;
-            // Find book by QR code or ID
-            let book = books.find(b => b.qrCode === decodedText);
-            if (!book) book = books.find(b => b.id === decodedText);
-            if (!book) book = books.find(b => b.title.toLowerCase() === decodedText.toLowerCase());
-
-            if (book) {
-                toast(`📖 Found: "${book.title}" (${book.status})`, 'success');
-                if (book.status === 'available') {
-                    if (confirm(`"${book.title}" is available. Borrow now?`)) {
-                        stopBookScanner();
-                        openBorrowForm(book.id);
+        // ========================================================================
+        //  STUDENT MANAGEMENT
+        // ========================================================================
+        function importStudentsCSV() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const text = ev.target.result;
+                        const lines = text.split('\n').filter(l => l.trim());
+                        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                        const idIdx = headers.findIndex(h => h.includes('admission') || h.includes('id'));
+                        const nameIdx = headers.findIndex(h => h.includes('name'));
+                        const classIdx = headers.findIndex(h => h.includes('class'));
+                        if (idIdx === -1 || nameIdx === -1) {
+                            toast('CSV must have "admission" and "name" columns.', 'error');
+                            return;
+                        }
+                        let count = 0;
+                        for (let i = 1; i < lines.length; i++) {
+                            const cols = lines[i].split(',').map(c => c.trim());
+                            const id = cols[idIdx] || '';
+                            const name = cols[nameIdx] || '';
+                            const cls = classIdx !== -1 ? cols[classIdx] || '' : '';
+                            if (id && name) {
+                                const existing = state.students.find(s => s.id === id);
+                                if (existing) {
+                                    existing.name = name;
+                                    existing.class = cls;
+                                } else {
+                                    state.students.push({ id, name, class: cls, createdAt: new Date().toISOString(),
+                                        updatedAt: new Date().toISOString() });
+                                }
+                                count++;
+                            }
+                        }
+                        saveData();
+                        renderAll();
+                        toast(`✅ Imported ${count} students.`, 'success');
+                    } catch (err) {
+                        toast('❌ CSV parse error: ' + err.message, 'error');
                     }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ========================================================================
+        //  SCANNER
+        // ========================================================================
+        function openScanner(mode) {
+            state.scannerMode = mode;
+            document.getElementById('scannerTitle').textContent = mode === 'book' ? '📷 Scan Book QR' :
+            '📷 Scan Student QR';
+            document.getElementById('manualInput').placeholder = mode === 'book' ? 'Enter book title or ISBN...' :
+                'Enter student name or ID...';
+            document.getElementById('scannerModal').classList.add('open');
+            document.getElementById('scannerResult').textContent = '';
+            startScanner();
+        }
+
+        function closeScanner() {
+            document.getElementById('scannerModal').classList.remove('open');
+            if (state.scannerInstance) {
+                state.scannerInstance.stop().catch(() => {});
+                state.scannerInstance = null;
+                state.scannerActive = false;
+            }
+        }
+
+        function toggleScanner() {
+            if (state.scannerActive) {
+                state.scannerInstance.stop().catch(() => {});
+                state.scannerActive = false;
+            } else {
+                startScanner();
+            }
+        }
+
+        function startScanner() {
+            if (state.scannerInstance) {
+                state.scannerInstance.stop().catch(() => {});
+                state.scannerInstance = null;
+            }
+            const container = document.getElementById('scannerContainer');
+            // Clear any old video
+            container.innerHTML = '<div class="scanner-overlay"></div>';
+
+            const html5QrCode = new Html5Qrcode("scannerContainer");
+            state.scannerInstance = html5QrCode;
+
+            const config = {
+                fps: 15,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            html5QrCode.start({ facingMode: "environment" },
+                config,
+                onScanSuccess,
+                onScanError
+            ).then(() => {
+                state.scannerActive = true;
+            }).catch(err => {
+                console.warn('Scanner start error:', err);
+                toast('⚠️ Camera access denied. Use manual entry.', 'warning');
+                state.scannerActive = false;
+            });
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Handle scan result
+            document.getElementById('scannerResult').textContent = '✅ Scanned: ' + decodedText;
+            // Vibrate
+            if (navigator.vibrate) navigator.vibrate(100);
+            // Process the scanned data
+            if (state.scannerMode === 'book') {
+                // Try to find book by ID or title
+                let book = state.books.find(b => b.id === decodedText || b.isbn === decodedText);
+                if (!book) {
+                    // Try by title match
+                    const match = state.books.filter(b => b.title.toLowerCase().includes(decodedText.toLowerCase()));
+                    if (match.length === 1) book = match[0];
+                    else if (match.length > 1) {
+                        toast('Multiple books match. Please select from catalog.', 'warning');
+                        return;
+                    }
+                }
+                if (book) {
+                    document.getElementById('manualInput').value = book.title;
+                    manualSubmit();
                 } else {
-                    if (confirm(`"${book.title}" is borrowed by ${book.borrowerName}. Return now?`)) {
-                        stopBookScanner();
-                        openReturnForm(book.id);
+                    document.getElementById('manualInput').value = decodedText;
+                    toast('Book not found. You can add it manually.', 'warning');
+                }
+            } else {
+                // Student mode
+                let student = state.students.find(s => s.id === decodedText);
+                if (!student) {
+                    const match = state.students.filter(s => s.name.toLowerCase().includes(decodedText.toLowerCase()));
+                    if (match.length === 1) student = match[0];
+                    else if (match.length > 1) {
+                        toast('Multiple students match. Please select from list.', 'warning');
+                        return;
+                    }
+                }
+                if (student) {
+                    document.getElementById('manualInput').value = student.name + ' (@' + student.id + ')';
+                    manualSubmit();
+                } else {
+                    document.getElementById('manualInput').value = decodedText;
+                    toast('Student not found. Please import or add them.', 'warning');
+                }
+            }
+            // Pause after scan
+            if (state.scannerInstance) {
+                state.scannerInstance.pause();
+                state.scannerActive = false;
+            }
+        }
+
+        function onScanError(err) {
+            // Ignore - keep scanning
+        }
+
+        function manualSubmit() {
+            const input = document.getElementById('manualInput').value.trim();
+            if (!input) { toast('Please enter a value.', 'error'); return; }
+
+            if (state.scannerMode === 'book') {
+                // Find or create book
+                let book = state.books.find(b => b.id === input || b.isbn === input || b.title.toLowerCase() === input
+                .toLowerCase());
+                if (!book) {
+                    // Search by partial title
+                    const matches = state.books.filter(b => b.title.toLowerCase().includes(input.toLowerCase()));
+                    if (matches.length === 1) book = matches[0];
+                    else if (matches.length > 1) {
+                        toast('Multiple books match. Please be more specific.', 'warning');
+                        return;
+                    }
+                }
+                if (book) {
+                    // Open borrow/return with this book
+                    closeScanner();
+                    openBorrowReturn(book.id);
+                } else {
+                    // Offer to add new book
+                    if (confirm(`Book "${input}" not found. Would you like to add it?`)) {
+                        closeScanner();
+                        openAddBook();
+                        document.getElementById('bookTitle').value = input;
                     }
                 }
             } else {
-                toast(`No book found for "${decodedText}". You can add it manually.`, 'warning');
-                if (confirm(`Book not found. Add "${decodedText}" as a new book?`)) {
-                    stopBookScanner();
-                    showModal(`
-                <h2><i class="fas fa-plus"></i> Add Book from QR</h2>
-                <p class="sub">Book not found in catalog. Add it now.</p>
-                <label>Title *</label>
-                <input type="text" id="qrBookTitle" value="${decodedText}" />
-                <label>ISBN (optional)</label>
-                <input type="text" id="qrBookIsbn" placeholder="ISBN" />
-                <div class="btn-row">
-                  <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-                  <button class="btn-primary" onclick="addBookFromQr('${decodedText}')">Add Book</button>
-                </div>
-              `);
+                // Student mode
+                let student = state.students.find(s => s.id === input || s.name.toLowerCase() === input.toLowerCase());
+                if (!student) {
+                    const matches = state.students.filter(s => s.name.toLowerCase().includes(input.toLowerCase()));
+                    if (matches.length === 1) student = matches[0];
+                    else if (matches.length > 1) {
+                        toast('Multiple students match. Please be more specific.', 'warning');
+                        return;
+                    }
                 }
-            }
-        }
-
-        function addBookFromQr(qrValue) {
-            const title = document.getElementById('qrBookTitle').value.trim();
-            if (!title) { toast('Title is required.', 'error'); return; }
-            const isbn = document.getElementById('qrBookIsbn').value.trim();
-            const book = {
-                id: generateId(),
-                title,
-                isbn: isbn || '',
-                qrCode: qrValue,
-                status: 'available',
-                borrowerId: null,
-                borrowerName: null,
-                borrowerClass: null,
-                borrowDate: null,
-                dueDate: null,
-                createdAt: new Date().toISOString()
-            };
-            books.push(book);
-            saveData();
-            closeModal();
-            renderAll();
-            toast(`Book "${title}" added from QR!`, 'success');
-        }
-
-        function onBookScanError(err) {
-            // ignore
-        }
-
-        function stopBookScanner() {
-            if (bookScanner) {
-                try { bookScanner.stop(); } catch (e) {}
-                bookScannerRunning = false;
-                document.getElementById('bookScanResult').textContent = '⏹ Scanner stopped.';
-                document.getElementById('bookQrReader').innerHTML =
-                    '<div class="scan-hint"><i class="fas fa-qrcode"></i><p>Click "Scan Book" to start.</p></div>';
-            }
-        }
-
-        function openScanBook() {
-            navigateTo('scan-book');
-            setTimeout(initBookScanner, 300);
-        }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  QR SCANNING - BORROWER
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        let borrowerScannerRunning = false;
-
-        function initBorrowerScanner() {
-            if (borrowerScannerRunning) return;
-            const container = document.getElementById('borrowerQrReader');
-            container.innerHTML = '';
-            const hint = document.createElement('div');
-            hint.className = 'scan-hint';
-            hint.innerHTML = '<i class="fas fa-camera"></i><p>Loading camera...</p>';
-            container.appendChild(hint);
-
-            try {
-                borrowerScanner = new Html5Qrcode("borrowerQrReader");
-                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-                borrowerScanner.start({ facingMode: "environment" }, config, onBorrowerScanSuccess, onBorrowerScanError);
-                borrowerScannerRunning = true;
-                document.getElementById('borrowerScanResult').textContent = '📷 Scanning...';
-            } catch (e) {
-                document.getElementById('borrowerScanResult').textContent = '❌ Camera error: ' + e.message;
-                hint.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Could not access camera. Please allow camera permissions.</p>';
-            }
-        }
-
-        function onBorrowerScanSuccess(decodedText) {
-            document.getElementById('borrowerScanResult').textContent = `✅ Scanned: ${decodedText}`;
-            let borrower = borrowers.find(b => b.qrCode === decodedText);
-            if (!borrower) borrower = borrowers.find(b => b.id === decodedText);
-            if (!borrower) borrower = borrowers.find(b => b.name.toLowerCase() === decodedText.toLowerCase());
-
-            if (borrower) {
-                toast(`👤 Found: ${borrower.name} (${borrower.class || 'No class'})`, 'success');
-                // Show borrower's borrowed books
-                const borrowedBooks = books.filter(b => b.borrowerId === borrower.id && b.status === 'borrowed');
-                if (borrowedBooks.length > 0) {
-                    const list = borrowedBooks.map(b => `• ${b.title}`).join('\n');
-                    alert(`📚 ${borrower.name} has borrowed:\n${list}`);
+                if (student) {
+                    closeScanner();
+                    openBorrowReturn(null, student.id);
                 } else {
-                    alert(`👤 ${borrower.name} has no borrowed books.`);
-                }
-                stopBorrowerScanner();
-                // Offer to borrow a book for this borrower
-                if (confirm(`Process a new borrow for ${borrower.name}?`)) {
-                    openBorrowFormForBorrower(borrower);
-                }
-            } else {
-                toast(`No borrower found for "${decodedText}". Add them now.`, 'warning');
-                if (confirm(`Borrower not found. Add "${decodedText}" as a new borrower?`)) {
-                    stopBorrowerScanner();
-                    showModal(`
-                <h2><i class="fas fa-user-plus"></i> Add Borrower</h2>
-                <p class="sub">Add a new student borrower.</p>
-                <label>Name *</label>
-                <input type="text" id="newBorrowerName" value="${decodedText}" />
-                <label>Class</label>
-                <input type="text" id="newBorrowerClass" placeholder="Class" />
-                <label>Admission ID</label>
-                <input type="text" id="newBorrowerId" placeholder="Admission number" />
-                <div class="btn-row">
-                  <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-                  <button class="btn-primary" onclick="addBorrowerFromQr('${decodedText}')">Add Borrower</button>
-                </div>
-              `);
+                    toast('Student not found. Please import from CSV.', 'error');
                 }
             }
         }
 
-        function addBorrowerFromQr(qrValue) {
-            const name = document.getElementById('newBorrowerName').value.trim();
-            const cls = document.getElementById('newBorrowerClass').value.trim();
-            const id = document.getElementById('newBorrowerId').value.trim() || generateId();
-            if (!name) { toast('Name is required.', 'error'); return; }
-            borrowers.push({ id, name, class: cls, qrCode: qrValue });
-            saveData();
-            closeModal();
-            toast(`Borrower "${name}" added!`, 'success');
-            // Offer to borrow
-            const borrower = borrowers.find(b => b.id === id);
-            if (borrower && confirm(`Start a new borrow for ${borrower.name}?`)) {
-                openBorrowFormForBorrower(borrower);
-            }
-        }
-
-        function openBorrowFormForBorrower(borrower) {
-            const bookOptions = books.filter(b => b.status === 'available')
-                .map(b => `<option value="${b.id}">${b.title}</option>`).join('');
-            showModal(`
-            <h2><i class="fas fa-hand-holding"></i> Borrow for ${borrower.name}</h2>
-            <p class="sub">Select a book to borrow.</p>
-            <label>Book *</label>
-            <select id="borrowBookSelect2">${bookOptions || '<option value="">No available books</option>'}</select>
-            <label>Due Date (optional)</label>
-            <input type="date" id="borrowDueDate2" />
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-              <button class="btn-success" onclick="confirmBorrowForBorrower('${borrower.id}')">Confirm Borrow</button>
-            </div>
-          `);
-        }
-
-        function confirmBorrowForBorrower(borrowerId) {
-            const bookId = document.getElementById('borrowBookSelect2').value;
-            const dueDate = document.getElementById('borrowDueDate2').value;
-            if (!bookId) { toast('Please select a book.', 'error'); return; }
-
-            const book = books.find(b => b.id === bookId);
-            const borrower = borrowers.find(b => b.id === borrowerId);
-            if (!book || !borrower) { toast('Book or borrower not found.', 'error'); return; }
-            if (book.status === 'borrowed') { toast('Book is already borrowed.', 'error'); return; }
-
-            book.status = 'borrowed';
-            book.borrowerId = borrower.id;
-            book.borrowerName = borrower.name;
-            book.borrowerClass = borrower.class || '';
-            book.borrowDate = new Date().toISOString();
-            book.dueDate = dueDate || '';
-
-            const tx = {
-                id: generateId(),
-                bookId: book.id,
-                bookTitle: book.title,
-                borrowerId: borrower.id,
-                borrowerName: borrower.name,
-                borrowerClass: borrower.class || '',
-                type: 'borrow',
-                date: new Date().toISOString(),
-                dueDate: dueDate || '',
-                returnDate: null
-            };
-            transactions.push(tx);
-            saveData();
-            closeModal();
-            renderAll();
-            toast(`"${book.title}" borrowed by ${borrower.name}!`, 'success');
-        }
-
-        function onBorrowerScanError(err) {
-            // ignore
-        }
-
-        function stopBorrowerScanner() {
-            if (borrowerScanner) {
-                try { borrowerScanner.stop(); } catch (e) {}
-                borrowerScannerRunning = false;
-                document.getElementById('borrowerScanResult').textContent = '⏹ Scanner stopped.';
-                document.getElementById('borrowerQrReader').innerHTML =
-                    '<div class="scan-hint"><i class="fas fa-id-card"></i><p>Click "Scan Borrower" to start.</p></div>';
-            }
-        }
-
-        function openScanBorrower() {
-            navigateTo('scan-borrower');
-            setTimeout(initBorrowerScanner, 300);
-        }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  MODAL HELPERS
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function showModal(html) {
-            document.getElementById('modalContent').innerHTML = html;
-            document.getElementById('modalOverlay').classList.add('open');
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('open');
-        }
-
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
+        document.getElementById('manualInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') manualSubmit();
         });
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  TOAST
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function toast(msg, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.textContent = msg;
-            container.appendChild(el);
-            setTimeout(() => { el.style.opacity = '0';
-                setTimeout(() => el.remove(), 400); }, 3500);
+        // ========================================================================
+        //  BORROW / RETURN
+        // ========================================================================
+        function openBorrowReturn(bookId = null, studentId = null) {
+            document.getElementById('borrowModal').classList.add('open');
+            document.getElementById('borrowBook').value = '';
+            document.getElementById('borrowStudent').value = '';
+            document.getElementById('borrowType').value = 'borrow';
+            document.getElementById('archiveReasonGroup').style.display = 'none';
+            state.borrowBookId = bookId;
+            state.borrowStudentId = studentId;
+
+            if (bookId) {
+                const book = state.books.find(b => b.id === bookId);
+                if (book) document.getElementById('borrowBook').value = book.title + ' (#' + book.id + ')';
+            }
+            if (studentId) {
+                const student = state.students.find(s => s.id === studentId);
+                if (student) document.getElementById('borrowStudent').value = student.name + ' (@' + student.id + ')';
+            }
+            // Setup autocomplete
+            setupAutocomplete('borrowBook', 'bookAutocomplete', state.books.map(b => ({ label: b.title + ' (#' + b.id +
+                    ')', value: b.id, type: 'book' })));
+            setupAutocomplete('borrowStudent', 'studentAutocomplete', state.students.map(s => ({ label: s.name + ' (@' + s
+                    .id + ')', value: s.id, type: 'student' })));
+            setupAutocomplete('archiveReason', 'reasonAutocomplete', state.archiveReasons.map(r => ({ label: r, value: r,
+                type: 'reason' })));
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        //  SUPABASE
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function checkSupabaseConfig() {
-            const url = localStorage.getItem('supa_url');
-            const key = localStorage.getItem('supa_key');
-            if (url && key) {
-                document.getElementById('supaUrl').value = url;
-                document.getElementById('supaKey').value = key;
-                connectSupabase(true);
-            }
+        function closeBorrowReturn() {
+            document.getElementById('borrowModal').classList.remove('open');
         }
 
-        async function connectSupabase(silent = false) {
-            const url = document.getElementById('supaUrl').value.trim();
-            const key = document.getElementById('supaKey').value.trim();
-            if (!url || !key) {
-                if (!silent) toast('Please enter both Supabase URL and Key.', 'error');
-                return;
-            }
-            try {
-                const { createClient } = supabase;
-                supabaseClient = createClient(url, key);
-                // Test connection
-                const { data, error } = await supabaseClient.from('books').select('count', { count: 'exact' }).limit(1);
-                if (error) throw error;
-                supabaseConnected = true;
-                localStorage.setItem('supa_url', url);
-                localStorage.setItem('supa_key', key);
-                document.getElementById('supaConnectStatus').textContent = '✅ Connected to Supabase!';
-                document.getElementById('supaConnectStatus').style.color = '#16a34a';
-                if (!silent) toast('Supabase connected!', 'success');
-                checkSupabaseStatus();
-            } catch (e) {
-                supabaseConnected = false;
-                document.getElementById('supaConnectStatus').textContent = '❌ Connection failed: ' + e.message;
-                document.getElementById('supaConnectStatus').style.color = '#dc2626';
-                if (!silent) toast('Supabase connection failed.', 'error');
-                checkSupabaseStatus();
-            }
-        }
+        function submitBorrowReturn() {
+            const bookInput = document.getElementById('borrowBook').value.trim();
+            const studentInput = document.getElementById('borrowStudent').value.trim();
+            const type = document.getElementById('borrowType').value;
+            const archiveReason = document.getElementById('archiveReason').value.trim();
 
-        function clearSupabaseConfig() {
-            localStorage.removeItem('supa_url');
-            localStorage.removeItem('supa_key');
-            supabaseClient = null;
-            supabaseConnected = false;
-            document.getElementById('supaUrl').value = '';
-            document.getElementById('supaKey').value = '';
-            document.getElementById('supaConnectStatus').textContent = 'Config cleared.';
-            document.getElementById('supaConnectStatus').style.color = '#94a3b8';
-            checkSupabaseStatus();
-            toast('Supabase config cleared.', 'warning');
-        }
-
-        async function pushToSupabase() {
-            if (!supabaseClient || !supabaseConnected) {
-                toast('Please connect to Supabase first.', 'error');
-                return;
-            }
-            try {
-                toast('Pushing data to Supabase...', 'info');
-                // Push books
-                for (const book of books) {
-                    const { error } = await supabaseClient.from('books').upsert({
-                        id: book.id,
-                        title: book.title,
-                        isbn: book.isbn,
-                        qr_code: book.qrCode,
-                        status: book.status,
-                        borrower_id: book.borrowerId,
-                        borrower_name: book.borrowerName,
-                        borrower_class: book.borrowerClass,
-                        borrow_date: book.borrowDate,
-                        due_date: book.dueDate,
-                        created_at: book.createdAt || new Date().toISOString()
-                    });
-                    if (error) throw error;
-                }
-                // Push transactions
-                for (const tx of transactions) {
-                    const { error } = await supabaseClient.from('transactions').upsert({
-                        id: tx.id,
-                        book_id: tx.bookId,
-                        book_title: tx.bookTitle,
-                        borrower_id: tx.borrowerId,
-                        borrower_name: tx.borrowerName,
-                        borrower_class: tx.borrowerClass,
-                        type: tx.type,
-                        date: tx.date,
-                        due_date: tx.dueDate,
-                        return_date: tx.returnDate
-                    });
-                    if (error) throw error;
-                }
-                // Push borrowers
-                for (const b of borrowers) {
-                    const { error } = await supabaseClient.from('borrowers').upsert({
-                        id: b.id,
-                        name: b.name,
-                        class: b.class,
-                        qr_code: b.qrCode
-                    });
-                    if (error) throw error;
-                }
-                toast('✅ Data pushed to Supabase successfully!', 'success');
-            } catch (e) {
-                toast('❌ Push failed: ' + e.message, 'error');
-            }
-        }
-
-        function checkSupabaseStatus() {
-            const dot = document.getElementById('supaDot');
-            const label = document.getElementById('supaLabel');
-            const url = localStorage.getItem('supa_url');
-            const key = localStorage.getItem('supa_key');
-            if (url && key && supabaseConnected) {
-                dot.className = 'dot green';
-                label.textContent = 'Supabase: Connected';
-            } else if (url && key) {
-                dot.className = 'dot red';
-                label.textContent = 'Supabase: Not connected';
+            // Parse book
+            let bookId = null;
+            const bookMatch = bookInput.match(/#([a-zA-Z0-9_]+)/);
+            if (bookMatch) {
+                bookId = bookMatch[1];
             } else {
-                dot.className = 'dot gray';
-                label.textContent = 'Supabase: Not configured';
+                // Try to find by title
+                const found = state.books.find(b => b.title.toLowerCase() === bookInput.toLowerCase());
+                if (found) bookId = found.id;
+            }
+            if (!bookId) {
+                // Try by ISBN
+                const found = state.books.find(b => b.isbn === bookInput);
+                if (found) bookId = found.id;
+            }
+            if (!bookId) {
+                toast('Book not found. Please select from autocomplete.', 'error');
+                return;
+            }
+
+            // Parse student
+            let studentId = null;
+            const studentMatch = studentInput.match(/@([a-zA-Z0-9_]+)/);
+            if (studentMatch) {
+                studentId = studentMatch[1];
+            } else {
+                const found = state.students.find(s => s.name.toLowerCase() === studentInput.toLowerCase());
+                if (found) studentId = found.id;
+            }
+            if (!studentId) {
+                toast('Student not found. Please select from autocomplete.', 'error');
+                return;
+            }
+
+            const book = state.books.find(b => b.id === bookId);
+            const student = state.students.find(s => s.id === studentId);
+            if (!book) { toast('Book not found.', 'error'); return; }
+            if (!student) { toast('Student not found.', 'error'); return; }
+
+            // Check if book is available for borrow
+            if (type === 'borrow' && book.status === 'borrowed') {
+                toast('This book is already borrowed.', 'error');
+                return;
+            }
+            if (type === 'return' && book.status !== 'borrowed') {
+                toast('This book is not currently borrowed.', 'error');
+                return;
+            }
+            if (type === 'return' && book.borrowedBy !== studentId) {
+                toast('This book was borrowed by a different student.', 'error');
+                return;
+            }
+
+            // Create transaction
+            const tx = {
+                id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                bookId,
+                studentId,
+                type,
+                archived: false,
+                archiveReason: null,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                createdBy: state.currentUser?.email || 'system',
+                revisions: [{ action: 'create', reason: type === 'borrow' ? 'Borrowed book' : 'Returned book',
+                    user: state.currentUser?.email || 'system', timestamp: new Date().toISOString() }]
+            };
+
+            // Update book status
+            if (type === 'borrow') {
+                book.status = 'borrowed';
+                book.borrowedBy = studentId;
+                book.updatedAt = new Date().toISOString();
+                book.revisions = book.revisions || [];
+                book.revisions.push({ action: 'borrow', reason: `Borrowed by ${student.name} (@${student.id})`,
+                    user: state.currentUser?.email || 'system', timestamp: new Date().toISOString() });
+            } else {
+                book.status = 'available';
+                book.borrowedBy = null;
+                book.updatedAt = new Date().toISOString();
+                book.revisions = book.revisions || [];
+                book.revisions.push({ action: 'return', reason: `Returned by ${student.name} (@${student.id})`,
+                    user: state.currentUser?.email || 'system', timestamp: new Date().toISOString() });
+            }
+
+            state.transactions.push(tx);
+            saveData();
+            closeBorrowReturn();
+            renderAll();
+            toast(`✅ ${type === 'borrow' ? 'Borrowed' : 'Returned'} "${book.title}" successfully!`, 'success');
+        }
+
+        // ========================================================================
+        //  AUTOCOMPLETE
+        // ========================================================================
+        function setupAutocomplete(inputId, listId, items) {
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(listId);
+            if (!input || !list) return;
+
+            input.addEventListener('input', function() {
+                const val = this.value.toLowerCase();
+                const filtered = items.filter(item => item.label.toLowerCase().includes(val));
+                if (filtered.length === 0 || val.length < 1) {
+                    list.classList.remove('open');
+                    return;
+                }
+                list.innerHTML = filtered.slice(0, 12).map(item =>
+                    `<div class="item" data-value="${item.value}" data-type="${item.type}">${item.label}</div>`
+                ).join('');
+                list.classList.add('open');
+
+                list.querySelectorAll('.item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        input.value = this.textContent;
+                        list.classList.remove('open');
+                        // Store the selected value
+                        if (inputId === 'borrowBook') state.borrowBookId = this.dataset.value;
+                        if (inputId === 'borrowStudent') state.borrowStudentId = this.dataset.value;
+                        if (inputId === 'archiveReason') {
+                            document.getElementById('archiveReason').value = this.textContent;
+                        }
+                    });
+                });
+            });
+
+            input.addEventListener('blur', function() {
+                setTimeout(() => list.classList.remove('open'), 200);
+            });
+
+            input.addEventListener('focus', function() {
+                if (this.value.length > 0) {
+                    this.dispatchEvent(new Event('input'));
+                }
+            });
+        }
+
+        // ========================================================================
+        //  ARCHIVE TRANSACTION
+        // ========================================================================
+        function archiveTransaction(id) {
+            const tx = state.transactions.find(t => t.id === id);
+            if (!tx) { toast('Transaction not found.', 'error'); return; }
+            const reason = prompt('Archive reason:', state.archiveReasons[0] || '');
+            if (reason === null) return;
+            tx.archived = true;
+            tx.archiveReason = reason || 'No reason provided';
+            tx.updatedAt = new Date().toISOString();
+            tx.revisions = tx.revisions || [];
+            tx.revisions.push({ action: 'archive', reason: reason || 'Archived', user: state.currentUser?.email ||
+                    'system', timestamp: new Date().toISOString() });
+            // If the book was borrowed, return it
+            const book = state.books.find(b => b.id === tx.bookId);
+            if (book && book.status === 'borrowed' && book.borrowedBy === tx.studentId) {
+                book.status = 'available';
+                book.borrowedBy = null;
+                book.updatedAt = new Date().toISOString();
+                book.revisions = book.revisions || [];
+                book.revisions.push({ action: 'auto_return', reason: 'Auto-returned due to archive',
+                    user: state.currentUser?.email || 'system', timestamp: new Date().toISOString() });
+            }
+            saveData();
+            renderAll();
+            toast('📦 Transaction archived.', 'info');
+        }
+
+        // ========================================================================
+        //  VIEW REVISION HISTORY
+        // ========================================================================
+        function viewRevision(id) {
+            const tx = state.transactions.find(t => t.id === id);
+            if (!tx) { toast('Transaction not found.', 'error'); return; }
+            const revisions = tx.revisions || [];
+            if (revisions.length === 0) {
+                toast('No revision history for this transaction.', 'info');
+                return;
+            }
+            const msg = revisions.map(r =>
+                `📜 ${r.action} — ${r.reason || 'No reason'} — ${r.user || 'system'} — ${new Date(r.timestamp).toLocaleString()}`
+            ).join('\n');
+            alert('Revision History:\n\n' + msg);
+        }
+
+        // ========================================================================
+        //  REASONS
+        // ========================================================================
+        function addReason() {
+            const input = document.getElementById('newReasonInput');
+            const val = input.value.trim();
+            if (!val) { toast('Please enter a reason.', 'error'); return; }
+            if (!state.archiveReasons.includes(val)) {
+                state.archiveReasons.push(val);
+                saveData();
+                renderReasons();
+                toast('✅ Reason added.', 'success');
+                input.value = '';
+            } else {
+                toast('Reason already exists.', 'warning');
             }
         }
 
-        function renderSettings() {
-            const url = localStorage.getItem('supa_url') || '';
-            const key = localStorage.getItem('supa_key') || '';
-            document.getElementById('supaUrl').value = url;
-            document.getElementById('supaKey').value = key;
-            document.getElementById('supaConnectStatus').textContent = supabaseConnected ? '✅ Connected' :
-                (url && key ? '❌ Not connected' : 'Not configured');
-            document.getElementById('supaConnectStatus').style.color = supabaseConnected ? '#16a34a' : '#94a3b8';
-            checkSupabaseStatus();
+        function renderReasons() {
+            const container = document.getElementById('reasonTags');
+            container.innerHTML = state.archiveReasons.map(r =>
+                `<span class="tag">${r}</span>`
+            ).join('');
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         //  CSV EXPORT / IMPORT
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        function exportCSV() {
-            if (books.length === 0) { toast('No books to export.', 'warning'); return; }
-            const headers = ['id', 'title', 'isbn', 'qrCode', 'status', 'borrowerName', 'borrowerClass', 'borrowDate',
-                'dueDate'
-            ];
-            const rows = books.map(b => headers.map(h => b[h] || '').join(','));
-            const csv = [headers.join(','), ...rows].join('\n');
+        // ========================================================================
+        function exportBooksCSV() {
+            const headers = ['id', 'title', 'author', 'isbn', 'status', 'tags', 'borrowedBy', 'createdAt'];
+            const rows = state.books.map(b =>
+                [b.id, b.title, b.author || '', b.isbn || '', b.status, (b.tags || []).join(';'), b.borrowedBy || '',
+                    b.createdAt || ''
+                ]
+            );
+            downloadCSV([headers, ...rows], 'books_export.csv');
+            toast('📤 Books exported.', 'success');
+        }
+
+        function exportAllCSV() {
+            exportBooksCSV();
+            // Students
+            const sHeaders = ['id', 'name', 'class', 'createdAt'];
+            const sRows = state.students.map(s => [s.id, s.name, s.class || '', s.createdAt || '']);
+            downloadCSV([sHeaders, ...sRows], 'students_export.csv');
+            // Transactions
+            const tHeaders = ['id', 'bookId', 'studentId', 'type', 'archived', 'archiveReason', 'createdAt', 'createdBy'];
+            const tRows = state.transactions.map(tx => [tx.id, tx.bookId, tx.studentId, tx.type, tx.archived || false, tx
+                .archiveReason || '', tx.createdAt || '', tx.createdBy || ''
+            ]);
+            downloadCSV([tHeaders, ...tRows], 'transactions_export.csv');
+            toast('📤 All data exported.', 'success');
+        }
+
+        function downloadCSV(rows, filename) {
+            const csv = rows.map(row => row.join(',')).join('\n');
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `library_export_${new Date().toISOString().slice(0,10)}.csv`;
+            a.download = filename;
             a.click();
             URL.revokeObjectURL(url);
-            toast('CSV exported!', 'success');
         }
 
-        function importCSV(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const text = e.target.result;
-                    const lines = text.split('\n').filter(line => line.trim());
-                    if (lines.length < 2) { toast('CSV is empty or invalid.', 'error'); return; }
-                    const headers = lines[0].split(',').map(h => h.trim());
-                    const imported = [];
-                    for (let i = 1; i < lines.length; i++) {
-                        const vals = lines[i].split(',').map(v => v.trim());
-                        const obj = {};
-                        headers.forEach((h, idx) => { obj[h] = vals[idx] || ''; });
-                        if (obj.title) {
-                            obj.id = obj.id || generateId();
-                            obj.status = obj.status || 'available';
-                            imported.push(obj);
+        function importBooksCSV() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const text = ev.target.result;
+                        const lines = text.split('\n').filter(l => l.trim());
+                        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                        const idIdx = headers.indexOf('id');
+                        const titleIdx = headers.indexOf('title');
+                        const authorIdx = headers.indexOf('author');
+                        const isbnIdx = headers.indexOf('isbn');
+                        const statusIdx = headers.indexOf('status');
+                        const tagsIdx = headers.indexOf('tags');
+                        const borrowedIdx = headers.indexOf('borrowedby');
+                        if (titleIdx === -1) { toast('CSV must have "title" column.', 'error'); return; }
+                        let count = 0;
+                        for (let i = 1; i < lines.length; i++) {
+                            const cols = lines[i].split(',').map(c => c.trim());
+                            const title = cols[titleIdx] || '';
+                            if (!title) continue;
+                            const id = idIdx !== -1 ? cols[idIdx] || 'bk_' + Date.now() + '_' + i : 'bk_' + Date.now() +
+                                '_' + i;
+                            const existing = state.books.find(b => b.id === id);
+                            const book = {
+                                id,
+                                title,
+                                author: authorIdx !== -1 ? cols[authorIdx] || '' : '',
+                                isbn: isbnIdx !== -1 ? cols[isbnIdx] || '' : '',
+                                status: statusIdx !== -1 ? cols[statusIdx] || 'available' : 'available',
+                                tags: tagsIdx !== -1 ? cols[tagsIdx].split(';').filter(t => t) : [],
+                                borrowedBy: borrowedIdx !== -1 ? cols[borrowedIdx] || null : null,
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString(),
+                                revisions: [{ action: 'import', reason: 'Imported from CSV',
+                                    user: state.currentUser?.email || 'system', timestamp: new Date()
+                                    .toISOString() }]
+                            };
+                            if (existing) {
+                                Object.assign(existing, book);
+                            } else {
+                                state.books.push(book);
+                            }
+                            count++;
                         }
+                        saveData();
+                        renderAll();
+                        toast(`✅ Imported ${count} books.`, 'success');
+                    } catch (err) {
+                        toast('❌ CSV parse error: ' + err.message, 'error');
                     }
-                    if (imported.length === 0) { toast('No valid books found in CSV.', 'error'); return; }
-                    // Merge: update existing by id, add new
-                    let added = 0,
-                        updated = 0;
-                    imported.forEach(imp => {
-                        const existing = books.find(b => b.id === imp.id);
-                        if (existing) {
-                            Object.assign(existing, imp);
-                            updated++;
-                        } else {
-                            books.push(imp);
-                            added++;
-                        }
-                    });
-                    saveData();
-                    renderAll();
-                    toast(`CSV imported: ${added} added, ${updated} updated.`, 'success');
-                } catch (err) {
-                    toast('CSV import error: ' + err.message, 'error');
-                }
+                };
+                reader.readAsText(file);
             };
-            reader.readAsText(file);
-            event.target.value = '';
+            input.click();
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function importAllCSV() {
+            // Import books, students, transactions - prompt for each
+            importBooksCSV();
+            setTimeout(() => {
+                const input2 = document.createElement('input');
+                input2.type = 'file';
+                input2.accept = '.csv';
+                input2.onchange = function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        try {
+                            const text = ev.target.result;
+                            const lines = text.split('\n').filter(l => l.trim());
+                            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                            const idIdx = headers.indexOf('id');
+                            const nameIdx = headers.indexOf('name');
+                            const classIdx = headers.indexOf('class');
+                            if (idIdx === -1 || nameIdx === -1) { toast('Students CSV must have "id" and "name".',
+                                    'error'); return; }
+                            let count = 0;
+                            for (let i = 1; i < lines.length; i++) {
+                                const cols = lines[i].split(',').map(c => c.trim());
+                                const id = cols[idIdx] || '';
+                                const name = cols[nameIdx] || '';
+                                if (!id || !name) continue;
+                                const existing = state.students.find(s => s.id === id);
+                                const student = { id, name, class: classIdx !== -1 ? cols[classIdx] || '' : '',
+                                    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+                                if (existing) Object.assign(existing, student);
+                                else state.students.push(student);
+                                count++;
+                            }
+                            saveData();
+                            renderAll();
+                            toast(`✅ Imported ${count} students.`, 'success');
+                        } catch (err) { toast('❌ Student CSV error: ' + err.message, 'error'); }
+                    };
+                    reader.readAsText(file);
+                };
+                input2.click();
+            }, 500);
+            toast('📥 Please select books CSV first, then students CSV.', 'info');
+        }
+
+        // ========================================================================
         //  CLEAR DATA
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         function clearAllData() {
             if (!confirm('⚠️ This will delete ALL local data. Are you sure?')) return;
             if (!confirm('Really? This cannot be undone.')) return;
-            books = [];
-            transactions = [];
-            borrowers = [];
+            state.books = [];
+            state.students = [];
+            state.transactions = [];
             saveData();
             renderAll();
-            toast('All local data cleared.', 'warning');
+            toast('🗑 All local data cleared.', 'info');
         }
 
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // ========================================================================
         //  INIT
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Auth state is handled above.
-        // Load data when user is set.
+        // ========================================================================
+        // Auto-render reasons
+        renderReasons();
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('open');
+                    if (this.id === 'scannerModal' && state.scannerInstance) {
+                        state.scannerInstance.stop().catch(() => {});
+                        state.scannerInstance = null;
+                        state.scannerActive = false;
+                    }
+                }
+            });
+        });
+
+        // Keyboard shortcut: Escape to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.open').forEach(el => {
+                    el.classList.remove('open');
+                    if (el.id === 'scannerModal' && state.scannerInstance) {
+                        state.scannerInstance.stop().catch(() => {});
+                        state.scannerInstance = null;
+                        state.scannerActive = false;
+                    }
+                });
+            }
+        });
+
+        // Show borrow/return type change
+        document.getElementById('borrowType').addEventListener('change', function() {
+            const group = document.getElementById('archiveReasonGroup');
+            if (this.value === 'return') {
+                group.style.display = 'block';
+            } else {
+                group.style.display = 'none';
+            }
+        });
 
         console.log('📚 Library Manager loaded.');
-        console.log('🔑 Firebase Auth enabled.');
-        console.log('📦 Data stored in localStorage.');
-        console.log('☁️ Supabase sync available in Settings.');
+        console.log('👤 Use Firebase Auth (Google) to login.');
+        console.log('🔌 Configure Supabase in Settings for cloud sync.');
+        console.log('📖 All data stored locally and syncable to Supabase.');
+        console.log('🏷 Use @ for students, # for tags.');
+        console.log('📷 Scan QR codes or enter manually.');
     </script>
 </body>
 </html>
