@@ -29,6 +29,9 @@ export function subscribeToBorrowRecords(callback) {
                 studentId: data.userId,
                 type: data.status === "Borrowed" ? "borrow" : "return",
                 createdAt: data.borrowDate ? (data.borrowDate.toDate ? data.borrowDate.toDate().toISOString() : new Date(data.borrowDate).toISOString()) : new Date().toISOString(),
+                borrowDate: data.borrowDate ? (data.borrowDate.toDate ? data.borrowDate.toDate().toISOString() : new Date(data.borrowDate).toISOString()) : null,
+                dueDate: data.dueDate ? (data.dueDate.toDate ? data.dueDate.toDate().toISOString() : new Date(data.dueDate).toISOString()) : null,
+                returnDate: data.returnDate ? (data.returnDate.toDate ? data.returnDate.toDate().toISOString() : new Date(data.returnDate).toISOString()) : null,
                 createdBy: "system",
                 archived: data.status === "Returned"
             });
@@ -275,4 +278,37 @@ export async function importTransactionsBulk(transactionsArray) {
     for (const b of chunks) {
         await b.commit();
     }
+}
+
+// Get member borrow stats & unpaid fines (Requirements 4, 5, 7)
+export async function getMemberBorrowDetails(userId) {
+    // 1. Get unpaid fines count and amount
+    const finesQuery = query(collection(db, "fines"), where("userId", "==", userId), where("status", "==", "Unpaid"));
+    const finesSnap = await getDocs(finesQuery);
+    let pendingFine = 0;
+    finesSnap.forEach(docSnap => {
+        pendingFine += (docSnap.data().amount || 0);
+    });
+
+    // 2. Get active borrowed books count
+    const borrowQuery = query(collection(db, "borrowRecords"), where("userId", "==", userId), where("status", "==", "Borrowed"));
+    const borrowSnap = await getDocs(borrowQuery);
+    const activeBorrows = borrowSnap.size;
+
+    // 3. Check if user has any blocked overdue books
+    let hasBlockedOverdue = false;
+    const now = new Date();
+    borrowSnap.forEach(docSnap => {
+        const data = docSnap.data();
+        const dueDate = data.dueDate ? (data.dueDate.toDate ? data.dueDate.toDate() : new Date(data.dueDate)) : null;
+        if (dueDate && now > dueDate) {
+            hasBlockedOverdue = true;
+        }
+    });
+
+    return {
+        pendingFine,
+        activeBorrows,
+        hasBlockedOverdue
+    };
 }

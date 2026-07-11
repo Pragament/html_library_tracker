@@ -30,10 +30,7 @@ export function subscribeToBooks(callback) {
 // Add a new book doc
 export async function addBook(bookData) {
     const newBookRef = doc(collection(db, "books"));
-    const availableVal = bookData.available !== undefined ? bookData.available : true;
     const total = Number(bookData.totalCopies) || 1;
-    const issued = Number(bookData.issuedCopies) || 0;
-    const availableCopies = Math.max(0, total - issued);
 
     const data = {
         id: newBookRef.id,
@@ -41,14 +38,16 @@ export async function addBook(bookData) {
         title: bookData.title || "",
         author: bookData.author || "",
         isbn: bookData.isbn || "",
+        publisher: bookData.publisher || "",
+        publishedYear: bookData.publishedYear ? Number(bookData.publishedYear) : null,
         tags: bookData.tags || [],
-        status: availableCopies > 0 ? "available" : "borrowed",
+        status: "Available",
         borrowedBy: null,
         category: bookData.category || "General",
-        available: availableVal,
-        availableCopies: availableCopies,
+        available: true,
+        availableCopies: total,
         totalCopies: total,
-        issuedCopies: issued,
+        issuedCopies: 0,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         revisions: [{ action: "create", reason: "Book added", user: "system", timestamp: new Date().toISOString() }]
