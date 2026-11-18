@@ -887,29 +887,32 @@
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="nav" id="mainNav">
-            <button class="active" data-page="dashboard">📊 Dashboard</button>
-            <button data-page="catalog">📖 Catalog</button>
-            <button data-page="transactions">🔄 Transactions</button>
-            <button data-page="reports">📈 Reports</button>
-            <button data-page="settings">⚙️ Settings</button>
-        </nav>
+            <!-- Navigation -->
+            <nav class="nav" id="mainNav">
+                <button class="active" data-page="dashboard">📊 Dashboard</button>
+                <button data-page="catalog">📖 Catalog</button>
+                <button data-page="students">👥 Students</button>
+                <button data-page="transactions">🔄 Transactions</button>
+                <button data-page="reservations">📅 Reservations</button>
+                <button data-page="reports">📈 Reports</button>
+                <button data-page="settings">⚙️ Settings</button>
+                <button data-page="student">🎓Student Portal</button>
+            </nav>
 
-        <!-- Main -->
-        <div class="main">
+            <!-- Main -->
+            <div class="main">
 
-            <!-- ====== DASHBOARD ====== -->
-            <div class="page active" id="page-dashboard">
-                <div class="grid-3" id="statsGrid" style="margin-bottom:20px;">
-                    <div class="stat-card"><div class="number" id="statBooks">0</div><div class="label">Total Books</div></div>
-                    <div class="stat-card"><div class="number" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
-                    <div class="stat-card"><div class="number" id="statAvailable">0</div><div class="label">Available</div></div>
-                </div>
+                <!-- ====== DASHBOARD ====== -->
+                <div class="page active" id="page-dashboard">
+                    <div class="grid-3" id="statsGrid" style="margin-bottom:20px;">
+                        <div class="stat-card"><div class="number" id="statBooks">0</div><div class="label">Total Books</div></div>
+                        <div class="stat-card"><div class="number" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
+                        <div class="stat-card"><div class="number" id="statAvailable">0</div><div class="label">Available</div></div>
+                    </div>
 
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-title">⚡ Quick Actions</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title">⚡ Quick Actions</div>
                         <div class="grid-3">
                             <div class="quick-action" onclick="openScanner('book')">
                                 <div class="icon">📷</div>
@@ -1118,8 +1121,98 @@
                     </div>
                 </div>
             </div>
+            <!-- LIBRARIAN STUDENTS PAGE -->
+<div class="page" id="page-students">
+    <div class="card">
+        <div class="card-title">👥 Student Management</div>
 
+        <p>Total Students: <strong id="totalStudents">0</strong></p>
+
+        <input
+            type="text"
+            id="studentSearch"
+            placeholder="Search by name or admission number..."
+            oninput="renderStudentsPage()"
+            style="width:100%;margin-bottom:12px;"
+        >
+
+        <div id="studentsPageList">
+            No students found.
+        </div>
+    </div>
+</div>
         </div><!-- /main -->
+        <!-- LIBRARIAN RESERVATIONS -->
+<div class="page" id="page-reservations">
+    <div class="card">
+        <div class="card-title">📅 Student Book Reservations</div>
+        <div id="adminReservations">
+            No reservations yet.
+        </div>
+    </div>
+</div>
+
+<!-- ====== STUDENT PORTAL ====== -->
+<div class="page" id="page-student">
+
+    <div class="card" id="studentLoginCard">
+        <div class="card-title">🎓 Student Login</div>
+        <p class="text-muted">Login using your registered admission number and phone number.</p>
+
+        <div class="form-group">
+            <label>Admission Number</label>
+            <input type="text" id="studentLoginAdmission" placeholder="Enter admission number">
+        </div>
+
+        <div class="form-group">
+            <label>Registered Phone Number</label>
+            <input type="tel" id="studentLoginPhone" placeholder="Enter registered phone number">
+        </div>
+
+        <button class="btn btn-primary" onclick="studentLogin()">
+            Login
+        </button>
+
+        <p id="studentLoginMessage" style="margin-top:10px;"></p>
+    </div>
+
+    <div id="studentDashboard" style="display:none;">
+        <div class="card">
+            <div class="card-title">
+                Welcome, <span id="loggedStudentName">Student</span>
+            </div>
+            <p>Admission Number: <strong id="loggedStudentAdmission"></strong></p>
+            <button class="btn btn-outline btn-sm" onclick="studentLogout()">Logout</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 My Dashboard</div>
+            <div id="studentDueSummary"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📚 Book Catalog</div>
+            <div id="studentCatalog"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📖 My Borrowed Books</div>
+            <div id="studentBorrowedBooks"></div>
+        </div>
+        <div class="card">
+    <div class="card-title">📚 Past Borrowed Books</div>
+    <div id="studentPastBooks"></div>
+</div>
+
+        <div class="card">
+            <div class="card-title">📅 My Reservations</div>
+            <div id="studentReservations"></div>
+        </div>
+    </div>
+
+</div>
+<!-- ====== END STUDENT PORTAL ====== -->
+
     </div><!-- /app -->
 
     <!-- ====== MODALS ====== -->
@@ -1258,6 +1351,7 @@
             books: [],
             students: [],
             transactions: [],
+            reservations: [],
             archiveReasons: ['Accidental entry', 'Typo', 'Duplicate', 'Wrong student', 'Wrong book', 'System error'],
             currentUser: null,
             supabaseClient: null,
@@ -1293,6 +1387,7 @@
                 localStorage.setItem('lib_books', JSON.stringify(state.books));
                 localStorage.setItem('lib_students', JSON.stringify(state.students));
                 localStorage.setItem('lib_transactions', JSON.stringify(state.transactions));
+                localStorage.setItem('lib_reservations', JSON.stringify(state.reservations));
                 localStorage.setItem('lib_reasons', JSON.stringify(state.archiveReasons));
                 localStorage.setItem('lib_supabase_url', document.getElementById('supabaseUrl').value || '');
                 localStorage.setItem('lib_supabase_key', document.getElementById('supabaseKey').value || '');
@@ -1310,6 +1405,8 @@
                 if (b) state.books = JSON.parse(b);
                 if (s) state.students = JSON.parse(s);
                 if (t) state.transactions = JSON.parse(t);
+                const reservations = localStorage.getItem('lib_reservations');
+if (reservations) state.reservations = JSON.parse(reservations);
                 if (r) state.archiveReasons = JSON.parse(r);
                 if (url) document.getElementById('supabaseUrl').value = url;
                 if (key) document.getElementById('supabaseKey').value = key;
@@ -1426,6 +1523,23 @@
                     connectSupabase().catch(() => {});
                 }
                 renderAll();
+                // Restore student session after refresh
+const savedStudent = JSON.parse(
+    localStorage.getItem('lib_student_session') || 'null'
+);
+
+if (savedStudent) {
+    document.getElementById('studentLoginCard').style.display = 'none';
+    document.getElementById('studentDashboard').style.display = 'block';
+
+    document.getElementById('loggedStudentName').textContent =
+        savedStudent.name;
+
+    document.getElementById('loggedStudentAdmission').textContent =
+        savedStudent.admissionNumber;
+
+    renderStudentDashboard();
+}
                 toast('👋 Welcome, ' + (user.displayName || 'Librarian') + '!', 'success');
             } else {
                 state.currentUser = null;
@@ -1457,7 +1571,9 @@
                 // Render charts if reports
                 if (page === 'reports') renderReports();
                 if (page === 'catalog') renderCatalog();
+                if (page === 'students') renderStudentsPage();
                 if (page === 'transactions') renderTransactions();
+                if (page === 'reservations') renderAdminReservations();
                 if (page === 'dashboard') renderDashboard();
             });
         });
@@ -1474,7 +1590,433 @@
             updateStatusBadge();
         }
 
-        function renderDashboard() {
+// ================= STUDENT LOGIN =================
+
+function normalizeStudentPhone(phone) {
+    return String(phone || '').replace(/\D/g, '');
+}
+
+function studentLogin() {
+    const admission = document.getElementById('studentLoginAdmission')
+        .value.trim().toLowerCase();
+
+    const phone = normalizeStudentPhone(
+        document.getElementById('studentLoginPhone').value
+    );
+
+    const message = document.getElementById('studentLoginMessage');
+
+    if (!admission || !phone) {
+        message.textContent = 'Enter admission number and phone number.';
+        return;
+    }
+
+    const student = state.students.find(s => {
+        const studentAdmission = String(
+            s.admissionNumber || s.admission_number || s.id || ''
+        ).trim().toLowerCase();
+
+        const studentPhone = normalizeStudentPhone(
+            s.phone || s.phone_number || ''
+        );
+
+        return studentAdmission === admission &&
+               studentPhone.length >= 10 &&
+               phone.length >= 10 &&
+               studentPhone.slice(-10) === phone.slice(-10);
+    });
+
+    if (!student) {
+        message.textContent = 'Invalid admission number or phone number.';
+        return;
+    }
+
+    localStorage.setItem('lib_student_session', JSON.stringify({
+        id: student.id,
+        name: student.name,
+        admissionNumber: student.admissionNumber || student.id
+    }));
+
+    document.getElementById('studentLoginCard').style.display = 'none';
+    document.getElementById('studentDashboard').style.display = 'block';
+
+    document.getElementById('loggedStudentName').textContent = student.name;
+    document.getElementById('loggedStudentAdmission').textContent =
+        student.admissionNumber || student.id;
+
+    renderStudentDashboard();
+}
+
+function studentLogout() {
+    localStorage.removeItem('lib_student_session');
+
+    document.getElementById('studentLoginCard').style.display = 'block';
+    document.getElementById('studentDashboard').style.display = 'none';
+
+    document.getElementById('studentLoginAdmission').value = '';
+    document.getElementById('studentLoginPhone').value = '';
+    document.getElementById('studentLoginMessage').textContent = '';
+}
+
+function renderStudentDashboard() {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    if (!session) return;
+
+    const studentId = session.id;
+
+    // Find the latest transaction for each book
+    const latest = {};
+
+    state.transactions
+        .filter(tx => !tx.archived && tx.studentId === studentId)
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        .forEach(tx => {
+            latest[tx.bookId] = tx;
+        });
+
+    const current = Object.values(latest)
+        .filter(tx => tx.type === 'borrow');
+
+    const history = Object.values(latest)
+        .filter(tx => tx.type === 'return');
+
+    let overdue = 0;
+    let dueSoon = 0;
+    let safe = 0;
+
+    const borrowedHTML = current.map(tx => {
+        const book = state.books.find(b => b.id === tx.bookId);
+        const due = tx.dueDate ? new Date(tx.dueDate) : null;
+        const days = due ? Math.ceil((due - new Date()) / 86400000) : null;
+
+        let color = 'green';
+        let status = 'No due date';
+
+        if (days !== null) {
+            if (days < 0) {
+                color = 'red';
+                status = 'Overdue';
+                overdue++;
+            } else if (days <= 3) {
+                color = 'yellow';
+                status = 'Due soon';
+                dueSoon++;
+            } else {
+                status = 'On time';
+                safe++;
+            }
+        }
+
+        return `
+    <div style="
+        padding:12px;
+        margin-bottom:10px;
+        border-radius:8px;
+        border-left:5px solid ${color};
+        background:${color === 'red' ? '#fee2e2' : color === 'yellow' ? '#fef3c7' : '#dcfce7'};
+    ">
+        <strong>${book ? book.title : 'Unknown book'}</strong>
+        <p>Due: ${due ? due.toLocaleDateString() : 'Not set'}</p>
+        <strong style="color:${color === 'red' ? '#dc2626' : color === 'yellow' ? '#a16207' : '#15803d'}">
+            ${status}
+        </strong>
+    </div>
+`;
+}).join('');
+
+    document.getElementById('studentDueSummary').innerHTML = `
+        <p>🔴 Overdue: ${overdue}</p>
+        <p>🟡 Due soon: ${dueSoon}</p>
+        <p>🟢 On time: ${safe}</p>
+    `;
+
+    document.getElementById('studentBorrowedBooks').innerHTML =
+        borrowedHTML || 'No currently borrowed books.'
+        const pastHTML = history.map(tx => {
+    const book = state.books.find(b => b.id === tx.bookId);
+
+    return `
+        <div style="padding:10px;border-bottom:1px solid #ddd;">
+            <strong>${book ? book.title : 'Book not found'}</strong>
+            <p>Returned on: ${new Date(tx.createdAt).toLocaleDateString()}</p>
+            <span style="color:green;">Returned</span>
+        </div>
+    `;
+}).join('');
+
+document.getElementById('studentPastBooks').innerHTML =
+    pastHTML || 'No past borrowed books.';
+    const myReservations = state.reservations.filter(
+    r => r.studentId === studentId
+);
+
+document.getElementById('studentReservations').innerHTML =
+    myReservations.length
+        ? myReservations.map(r => {
+            const book = state.books.find(b => b.id === r.bookId);
+
+            return `
+                <div style="padding:10px;border-bottom:1px solid #ddd;">
+                    <strong>${book ? book.title : 'Book not found'}</strong>
+                    <p>Status: ${r.status}</p>
+                    <p>Reserved on: ${new Date(r.createdAt).toLocaleDateString()}</p>
+                </div>
+            `;
+        }).join('')
+        : 'No reservations yet.';;
+
+// Display available books
+// Display available books
+const catalog = state.books.filter(b => b.status === 'available');
+
+document.getElementById('studentCatalog').innerHTML =
+    catalog.length
+        ? catalog.map(b => `
+            <div style="padding:10px;border-bottom:1px solid #ddd;">
+                <strong>${b.title}</strong>
+                <p>${b.author || 'Unknown author'}</p>
+                <span style="color:green;">Available</span>
+                <button class="btn btn-primary btn-sm"
+                    onclick="reserveBook('${b.id}')">
+                    📅 Reserve Book
+                </button>
+            </div>
+        `).join('')
+        : 'No books currently available.';
+}
+
+function reserveBook(bookId) {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    if (!session) {
+        alert('Please login first.');
+        return;
+    }
+
+    const book = state.books.find(b => b.id === bookId);
+    if (!book || book.status !== 'available') {
+        alert('This book is no longer available.');
+        return;
+    }
+
+    const alreadyReserved = state.reservations.some(r =>
+        r.bookId === bookId &&
+        r.studentId === session.id &&
+        r.status === 'pending'
+    );
+
+    if (alreadyReserved) {
+        alert('You have already reserved this book.');
+        return;
+    }
+
+    state.reservations.push({
+        id: 'res_' + Date.now(),
+        bookId: bookId,
+        studentId: session.id,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    });
+
+    saveData();
+    renderStudentDashboard();
+
+    alert('Book reserved successfully! Waiting for librarian approval.');
+}
+
+
+function reserveBook(bookId) {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    if (!session) {
+        alert('Please login first.');
+        return;
+    }
+
+    const book = state.books.find(b => b.id === bookId);
+
+    if (!book || book.status !== 'available') {
+        alert('This book is not available.');
+        return;
+    }
+
+    const alreadyReserved = state.reservations.some(r =>
+        r.bookId === bookId &&
+        r.studentId === session.id &&
+        r.status === 'pending'
+    );
+
+    if (alreadyReserved) {
+        alert('You have already reserved this book.');
+        return;
+    }
+
+    state.reservations.push({
+        id: 'res_' + Date.now(),
+        bookId,
+        studentId: session.id,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    });
+
+    saveData();
+    alert('Reservation submitted! Waiting for librarian approval.');
+    renderStudentDashboard();
+}
+
+function approveReservation(reservationId) {
+    const reservation = state.reservations.find(
+        r => r.id === reservationId
+    );
+
+    if (!reservation || reservation.status !== 'pending') return;
+
+    const book = state.books.find(b => b.id === reservation.bookId);
+
+    if (!book || book.status !== 'available') {
+        alert('This book is no longer available.');
+        return;
+    }
+
+    reservation.status = 'approved';
+
+    saveData();
+    renderAdminReservations();
+    alert('Reservation approved!');
+}
+
+
+function issueReservedBook(reservationId) {
+    const reservation = state.reservations.find(
+        r => r.id === reservationId
+    );
+
+    if (!reservation || reservation.status !== 'approved') return;
+
+    const book = state.books.find(b => b.id === reservation.bookId);
+
+    if (!book || book.status !== 'available') {
+        alert('This book is no longer available.');
+        return;
+    }
+
+    const now = new Date().toISOString();
+
+    state.transactions.push({
+        id: 'tx_' + Date.now(),
+        bookId: reservation.bookId,
+        studentId: reservation.studentId,
+        type: 'borrow',
+        archived: false,
+        archiveReason: null,
+        createdAt: now,
+        updatedAt: now,
+        dueDate: new Date(Date.now() + 14 * 86400000).toISOString(),
+        createdBy: state.currentUser?.email || 'librarian',
+        revisions: []
+    });
+
+    book.status = 'borrowed';
+    book.borrowedBy = reservation.studentId;
+    reservation.status = 'issued';
+
+    saveData();
+    renderAll();
+    renderAdminReservations();
+
+    alert('Book issued successfully!');
+}        
+
+            function renderAdminReservations() {
+    const container = document.getElementById('adminReservations');
+
+    if (!container) return;
+
+    if (!state.reservations.length) {
+        container.innerHTML = 'No reservations yet.';
+        return;
+    }
+        container.innerHTML = state.reservations.map(r => {
+        const book = state.books.find(b => b.id === r.bookId);
+        const student = state.students.find(s => s.id === r.studentId);
+
+        return `
+            <div style="padding:12px;border-bottom:1px solid #ddd;">
+                <strong>${book ? book.title : 'Book not found'}</strong>
+                <p>Student: ${student ? student.name : r.studentId}</p>
+                <p>Admission No: ${r.studentId}</p>
+                <p>Status: ${r.status}</p>
+
+${r.status === 'pending' ? `
+    <button class="btn btn-primary btn-sm"
+        onclick="approveReservation('${r.id}')">
+        Approve
+    </button>
+` : ''}
+
+${r.status === 'approved' ? `
+    <button class="btn btn-success btn-sm"
+        onclick="issueReservedBook('${r.id}')">
+        Issue Book
+    </button>
+` : ''}
+            </div>
+        `;
+    }).join('');
+}
+function renderStudentsPage() {
+    const container = document.getElementById('studentsPageList');
+    const count = document.getElementById('totalStudents');
+    const search = document.getElementById('studentSearch');
+
+    if (!container) return;
+
+    count.textContent = state.students.length;
+
+    const query = search.value.trim().toLowerCase();
+
+    const filtered = state.students.filter(s =>
+        String(s.name || '').toLowerCase().includes(query) ||
+        String(s.id || '').toLowerCase().includes(query) ||
+        String(s.admissionNumber || '').toLowerCase().includes(query)
+    );
+
+    if (!filtered.length) {
+        container.innerHTML = 'No students found.';
+        return;
+    }
+
+    container.innerHTML = `
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>Admission Number</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filtered.map(s => `
+                    <tr>
+                        <td>${s.admissionNumber || s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.class || '-'}</td>
+                        <td>${s.phone || '-'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+function renderDashboard() {
             const total = state.books.length;
             const borrowed = state.books.filter(b => b.status === 'borrowed').length;
             const available = state.books.filter(b => b.status === 'available').length;
@@ -1839,55 +2381,87 @@
         // ========================================================================
         //  STUDENT MANAGEMENT
         // ========================================================================
-        function importStudentsCSV() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.csv';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    try {
-                        const text = ev.target.result;
-                        const lines = text.split('\n').filter(l => l.trim());
-                        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-                        const idIdx = headers.findIndex(h => h.includes('admission') || h.includes('id'));
-                        const nameIdx = headers.findIndex(h => h.includes('name'));
-                        const classIdx = headers.findIndex(h => h.includes('class'));
-                        if (idIdx === -1 || nameIdx === -1) {
-                            toast('CSV must have "admission" and "name" columns.', 'error');
-                            return;
-                        }
-                        let count = 0;
-                        for (let i = 1; i < lines.length; i++) {
-                            const cols = lines[i].split(',').map(c => c.trim());
-                            const id = cols[idIdx] || '';
-                            const name = cols[nameIdx] || '';
-                            const cls = classIdx !== -1 ? cols[classIdx] || '' : '';
-                            if (id && name) {
-                                const existing = state.students.find(s => s.id === id);
-                                if (existing) {
-                                    existing.name = name;
-                                    existing.class = cls;
-                                } else {
-                                    state.students.push({ id, name, class: cls, createdAt: new Date().toISOString(),
-                                        updatedAt: new Date().toISOString() });
-                                }
-                                count++;
-                            }
-                        }
-                        saveData();
-                        renderAll();
-                        toast(`✅ Imported ${count} students.`, 'success');
-                    } catch (err) {
-                        toast('❌ CSV parse error: ' + err.message, 'error');
+        
+function importStudentsCSV() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(ev) {
+            try {
+                const lines = ev.target.result.split('\n').filter(l => l.trim());
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+                const idIdx = headers.findIndex(h =>
+                    h.includes('admission') || h === 'admin' || h === 'id'
+                );
+                const nameIdx = headers.findIndex(h => h.includes('name'));
+                const classIdx = headers.findIndex(h => h.includes('class'));
+                const phoneIdx = headers.findIndex(h =>
+                    h.includes('phone') || h.includes('mobile') || h.includes('ph-1')
+                );
+
+                if (idIdx === -1 || nameIdx === -1) {
+                    toast('CSV needs admission and name columns.', 'error');
+                    return;
+                }
+
+                let count = 0;
+
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim());
+
+                    const id = cols[idIdx] || '';
+                    const name = cols[nameIdx] || '';
+                    const cls = classIdx !== -1 ? cols[classIdx] || '' : '';
+                    const phone = phoneIdx !== -1 ? cols[phoneIdx] || '' : '';
+
+                    if (!id || !name) continue;
+
+                    const existing = state.students.find(s =>
+                        String(s.id).trim().toLowerCase() === id.toLowerCase()
+                    );
+
+                    if (existing) {
+                        existing.name = name;
+                        existing.class = cls;
+                        if (phone) existing.phone = phone;
+                        existing.updatedAt = new Date().toISOString();
+                    } else {
+                        state.students.push({
+                            id,
+                            admissionNumber: id,
+                            name,
+                            class: cls,
+                            phone,
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        });
                     }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
+
+                    count++;
+                }
+
+                saveData();
+                renderAll();
+                toast(`Imported ${count} students successfully.`, 'success');
+
+            } catch (err) {
+                toast('CSV error: ' + err.message, 'error');
+            }
+        };
+
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
 
         // ========================================================================
         //  SCANNER
@@ -2161,6 +2735,9 @@
                 archived: false,
                 archiveReason: null,
                 createdAt: new Date().toISOString(),
+                dueDate: type === 'borrow'
+    ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+    : null,
                 updatedAt: new Date().toISOString(),
                 createdBy: state.currentUser?.email || 'system',
                 revisions: [{ action: 'create', reason: type === 'borrow' ? 'Borrowed book' : 'Returned book',
