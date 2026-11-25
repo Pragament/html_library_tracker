@@ -1,0 +1,32 @@
+{
+  "name": "html_library_tracker",
+  "version": "1.0.0",
+  "description": "A browser-based school library tracker built in a single `index.html` file with HTML, CSS, and JavaScript. It manages books, students, and lending transactions, saves data in browser localStorage, and supports manual Supabase cloud sync.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CODE-CR7/html_library_tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CODE-CR7/html_library_tracker/issues"
+  },
+  "homepage": "https://github.com/CODE-CR7/html_library_tracker#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.1",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.5",
+    "firebase-admin": "^14.5.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

@@ -887,29 +887,32 @@
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="nav" id="mainNav">
-            <button class="active" data-page="dashboard">📊 Dashboard</button>
-            <button data-page="catalog">📖 Catalog</button>
-            <button data-page="transactions">🔄 Transactions</button>
-            <button data-page="reports">📈 Reports</button>
-            <button data-page="settings">⚙️ Settings</button>
-        </nav>
+            <!-- Navigation -->
+            <nav class="nav" id="mainNav">
+                <button class="active" data-page="dashboard">📊 Dashboard</button>
+                <button data-page="catalog">📖 Catalog</button>
+                <button data-page="students">👥 Students</button>
+                <button data-page="transactions">🔄 Transactions</button>
+                <button data-page="reservations">📅 Reservations</button>
+                <button data-page="reports">📈 Reports</button>
+                <button data-page="settings">⚙️ Settings</button>
+                <button data-page="student">🎓Student Portal</button>
+            </nav>
 
-        <!-- Main -->
-        <div class="main">
+            <!-- Main -->
+            <div class="main">
 
-            <!-- ====== DASHBOARD ====== -->
-            <div class="page active" id="page-dashboard">
-                <div class="grid-3" id="statsGrid" style="margin-bottom:20px;">
-                    <div class="stat-card"><div class="number" id="statBooks">0</div><div class="label">Total Books</div></div>
-                    <div class="stat-card"><div class="number" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
-                    <div class="stat-card"><div class="number" id="statAvailable">0</div><div class="label">Available</div></div>
-                </div>
+                <!-- ====== DASHBOARD ====== -->
+                <div class="page active" id="page-dashboard">
+                    <div class="grid-3" id="statsGrid" style="margin-bottom:20px;">
+                        <div class="stat-card"><div class="number" id="statBooks">0</div><div class="label">Total Books</div></div>
+                        <div class="stat-card"><div class="number" id="statBorrowed">0</div><div class="label">Borrowed</div></div>
+                        <div class="stat-card"><div class="number" id="statAvailable">0</div><div class="label">Available</div></div>
+                    </div>
 
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-title">⚡ Quick Actions</div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-title">⚡ Quick Actions</div>
                         <div class="grid-3">
                             <div class="quick-action" onclick="openScanner('book')">
                                 <div class="icon">📷</div>
@@ -1118,8 +1121,105 @@
                     </div>
                 </div>
             </div>
+            <!-- LIBRARIAN STUDENTS PAGE -->
+<div class="page" id="page-students">
+    <div class="card">
+        <div class="card-title">👥 Student Management</div>
 
+        <p>Total Students: <strong id="totalStudents">0</strong></p>
+
+        <input
+            type="text"
+            id="studentSearch"
+            placeholder="Search by name or admission number..."
+            oninput="renderStudentsPage()"
+            style="width:100%;margin-bottom:12px;"
+        >
+
+        <div id="studentsPageList">
+            No students found.
+        </div>
+    </div>
+</div>
         </div><!-- /main -->
+        <!-- LIBRARIAN RESERVATIONS -->
+<div class="page" id="page-reservations">
+    <div class="card">
+        <div class="card-title">📅 Student Book Reservations</div>
+        <div id="adminReservations">
+            No reservations yet.
+        </div>
+            </div>
+
+    <div class="card">
+        <div class="card-title">📚 Currently Borrowed Books</div>
+        <div id="activeBorrowedBooks">
+            Loading borrowed books...
+        </div>
+    </div>
+</div>
+
+<!-- ====== STUDENT PORTAL ====== -->
+<div class="page" id="page-student">
+
+    <div class="card" id="studentLoginCard">
+        <div class="card-title">🎓 Student Login</div>
+        <p class="text-muted">Login using your registered admission number and phone number.</p>
+
+        <div class="form-group">
+            <label>Admission Number</label>
+            <input type="text" id="studentLoginAdmission" placeholder="Enter admission number">
+        </div>
+
+        <div class="form-group">
+            <label>Registered Phone Number</label>
+            <input type="tel" id="studentLoginPhone" placeholder="Enter registered phone number">
+        </div>
+
+        <button class="btn btn-primary" onclick="studentLogin()">
+            Login
+        </button>
+
+        <p id="studentLoginMessage" style="margin-top:10px;"></p>
+    </div>
+
+    <div id="studentDashboard" style="display:none;">
+        <div class="card">
+            <div class="card-title">
+                Welcome, <span id="loggedStudentName">Student</span>
+            </div>
+            <p>Admission Number: <strong id="loggedStudentAdmission"></strong></p>
+            <button class="btn btn-outline btn-sm" onclick="studentLogout()">Logout</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 My Dashboard</div>
+            <div id="studentDueSummary"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📚 Book Catalog</div>
+            <div id="studentCatalog"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📖 My Borrowed Books</div>
+            <div id="studentBorrowedBooks"></div>
+        </div>
+        <div class="card">
+    <div class="card-title">📚 Past Borrowed Books</div>
+    <div id="studentPastBooks"></div>
+</div>
+
+        <div class="card">
+            <div class="card-title">📅 My Reservations</div>
+            <div id="studentReservations"></div>
+        </div>
+    </div>
+
+</div>
+<!-- ====== END STUDENT PORTAL ====== -->
+
     </div><!-- /app -->
 
     <!-- ====== MODALS ====== -->
@@ -1238,15 +1338,14 @@
         //  FIREBASE CONFIG (replace with your own)
         // ========================================================================
         const firebaseConfig = {
-  apiKey: "AIzaSyDQ1SY4lQ9CtaW_Fr_YD1-HJjMzUrmnCRQ",
-  authDomain: "library-management-2d1fa.firebaseapp.com",
-  projectId: "library-management-2d1fa",
-  storageBucket: "library-management-2d1fa.firebasestorage.app",
-  messagingSenderId: "874629417122",
-  appId: "1:874629417122:web:e747713799610e81952ffb",
-  measurementId: "G-80ED6ME7FR"
+    apiKey: "AIzaSyAMTiWWDLFARmEs2w8_29PjIEWdVozabZ4",
+    authDomain: "student-library-management.firebaseapp.com",
+    projectId: "student-library-management",
+    storageBucket: "student-library-management.firebasestorage.app",
+    messagingSenderId: "440650198718",
+    appId: "1:440650198718:web:436c23edad962aa638f8ef",
+    measurementId: "G-7P8EC3ZLYD"
 };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
@@ -1258,6 +1357,7 @@
             books: [],
             students: [],
             transactions: [],
+            reservations: [],
             archiveReasons: ['Accidental entry', 'Typo', 'Duplicate', 'Wrong student', 'Wrong book', 'System error'],
             currentUser: null,
             supabaseClient: null,
@@ -1293,6 +1393,7 @@
                 localStorage.setItem('lib_books', JSON.stringify(state.books));
                 localStorage.setItem('lib_students', JSON.stringify(state.students));
                 localStorage.setItem('lib_transactions', JSON.stringify(state.transactions));
+                localStorage.setItem('lib_reservations', JSON.stringify(state.reservations));
                 localStorage.setItem('lib_reasons', JSON.stringify(state.archiveReasons));
                 localStorage.setItem('lib_supabase_url', document.getElementById('supabaseUrl').value || '');
                 localStorage.setItem('lib_supabase_key', document.getElementById('supabaseKey').value || '');
@@ -1310,6 +1411,8 @@
                 if (b) state.books = JSON.parse(b);
                 if (s) state.students = JSON.parse(s);
                 if (t) state.transactions = JSON.parse(t);
+                const reservations = localStorage.getItem('lib_reservations');
+if (reservations) state.reservations = JSON.parse(reservations);
                 if (r) state.archiveReasons = JSON.parse(r);
                 if (url) document.getElementById('supabaseUrl').value = url;
                 if (key) document.getElementById('supabaseKey').value = key;
@@ -1319,7 +1422,7 @@
         // ========================================================================
         //  SUPABASE
         // ========================================================================
-        async function connectSupabase() {
+        async function connectSupabase  () {
             const url = document.getElementById('supabaseUrl').value.trim();
             const key = document.getElementById('supabaseKey').value.trim();
             if (!url || !key) { toast('Please enter both Supabase URL and Anon Key.', 'error'); return; }
@@ -1426,6 +1529,67 @@
                     connectSupabase().catch(() => {});
                 }
                 renderAll();
+                // Restore student session after refresh
+const savedStudent = JSON.parse(
+    localStorage.getItem('lib_student_session') || 'null'
+);
+
+                // Restore and verify student session after refresh
+                async function restoreStudentSession() {
+                    const token = localStorage.getItem('lib_student_token');
+
+                    if (!token) {
+                        localStorage.removeItem('lib_student_session');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(
+    'http://localhost:3000/api/student/login',
+    {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+);
+
+                        const result = await response.json();
+
+                        if (!response.ok || !result.success) {
+                            throw new Error('Session expired');
+                        }
+
+                        const student = result.student;
+
+                        localStorage.setItem(
+                            'lib_student_session',
+                            JSON.stringify(student)
+                        );
+
+                        document.getElementById('studentLoginCard').style.display = 'none';
+                        document.getElementById('studentDashboard').style.display = 'block';
+
+                        document.getElementById('loggedStudentName').textContent =
+                            student.name;
+
+                        document.getElementById('loggedStudentAdmission').textContent =
+                            student.admissionNumber;
+
+                        renderStudentDashboard();
+
+                    } catch (error) {
+                        localStorage.removeItem('lib_student_token');
+                        localStorage.removeItem('lib_student_session');
+
+                        document.getElementById('studentLoginCard').style.display = 'block';
+                        document.getElementById('studentDashboard').style.display = 'none';
+
+                        console.log('Student session not restored:', error.message);
+                    }
+                }
+
+                restoreStudentSession();
+
                 toast('👋 Welcome, ' + (user.displayName || 'Librarian') + '!', 'success');
             } else {
                 state.currentUser = null;
@@ -1456,8 +1620,13 @@
                 document.getElementById('page-' + page).classList.add('active');
                 // Render charts if reports
                 if (page === 'reports') renderReports();
-                if (page === 'catalog') renderCatalog();
+                if (page === 'catalog') loadAdminCatalog();
+                if (page === 'students') renderStudentsPage();
                 if (page === 'transactions') renderTransactions();
+                if (page === 'reservations') {
+    renderAdminReservations();
+    renderActiveBorrowedBooks();
+}
                 if (page === 'dashboard') renderDashboard();
             });
         });
@@ -1474,7 +1643,680 @@
             updateStatusBadge();
         }
 
-        function renderDashboard() {
+// ================= STUDENT LOGIN =================
+
+function normalizeStudentPhone(phone) {
+    return String(phone || '').replace(/\D/g, '');
+}
+
+async function studentLogin() {
+    const admission = document.getElementById('studentLoginAdmission')
+        .value.trim();
+
+    const phone = normalizeStudentPhone(
+        document.getElementById('studentLoginPhone').value
+    );
+
+    const message = document.getElementById('studentLoginMessage');
+
+    if (!admission || phone.length < 10) {
+        message.textContent = 'Enter valid admission number and phone number.';
+        return;
+    }
+
+    message.textContent = 'Verifying student details...';
+
+    try {
+        const response = await fetch(
+            'https://html-library-tracker.onrender.com/api/student/login',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    admission: admission,
+                    phone: phone
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            message.textContent = result.error || 'Login failed.';
+            return;
+        }
+
+        // Save signed login token
+        localStorage.setItem('lib_student_token', result.token);
+
+        // Save basic student session
+        localStorage.setItem('lib_student_session', JSON.stringify({
+            id: result.student.id,
+            name: result.student.name,
+            admissionNumber: result.student.admissionNumber
+        }));
+
+        const student = result.student;
+
+        document.getElementById('studentLoginCard').style.display = 'none';
+        document.getElementById('studentDashboard').style.display = 'block';
+
+        document.getElementById('loggedStudentName').textContent = student.name;
+        document.getElementById('loggedStudentAdmission').textContent =
+            student.admissionNumber;
+
+        message.textContent = '';
+
+        renderStudentDashboard();
+
+    } catch (error) {
+        console.error('Student login error:', error);
+        message.textContent = 'Unable to connect to the login server.';
+    }
+}
+
+
+function studentLogout() {
+    // Clear student session and authentication token
+    localStorage.removeItem('lib_student_session');
+    localStorage.removeItem('lib_student_token');
+
+    document.getElementById('studentLoginCard').style.display = 'block';
+    document.getElementById('studentDashboard').style.display = 'none';
+
+    document.getElementById('studentLoginAdmission').value = '';
+    document.getElementById('studentLoginPhone').value = '';
+    document.getElementById('studentLoginMessage').textContent = '';
+}
+
+async function renderStudentDashboard() {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    const token = localStorage.getItem('lib_student_token');
+
+    if (!session || !token) return;
+
+    const studentId = session.id;
+
+    // Fetch books from Supabase through Express API
+    try {
+        const response = await fetch(
+            'http://localhost:3000/api/books',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Unable to load books.');
+        }
+
+        state.books = result.books || [];
+
+    } catch (error) {
+        console.error('Books loading error:', error);
+
+        document.getElementById('studentCatalog').textContent =
+            'Unable to load books. Please try again.';
+    }
+
+    // Fetch student's borrowing history from the database
+    let studentTransactions = [];
+    let myReservations = [];
+
+    try {
+        const transactionResponse = await fetch(
+            'http://localhost:3000/api/student/transactions',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const transactionResult = await transactionResponse.json();
+
+        if (!transactionResponse.ok || !transactionResult.success) {
+            throw new Error(transactionResult.error || 'Unable to load borrowing history.');
+        }
+
+        studentTransactions = transactionResult.transactions || [];
+
+        const reservationResponse = await fetch(
+            'http://localhost:3000/api/student/reservations',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const reservationResult = await reservationResponse.json();
+
+        if (!reservationResponse.ok || !reservationResult.success) {
+            throw new Error(reservationResult.error || 'Unable to load reservations.');
+        }
+
+        myReservations = reservationResult.reservations || [];
+
+    } catch (error) {
+        console.error('Student history loading error:', error);
+    }
+
+    const current = studentTransactions.filter(tx => !tx.returned_at);
+    const history = studentTransactions.filter(tx => tx.returned_at);
+
+    let overdue = 0;
+    let dueSoon = 0;
+    let safe = 0;
+
+    // Currently borrowed books
+    const borrowedHTML = current.map(tx => {
+        const book = state.books.find(b => b.id === tx.book_id);
+        const due = tx.due_date ? new Date(tx.due_date) : null;
+        const days = due
+            ? Math.ceil((due - new Date()) / 86400000)
+            : null;
+
+        let color = 'green';
+        let status = 'No due date';
+
+        if (days !== null) {
+            if (days < 0) {
+                color = 'red';
+                status = 'Overdue';
+                overdue++;
+            } else if (days <= 3) {
+                color = 'yellow';
+                status = 'Due soon';
+                dueSoon++;
+            } else {
+                status = 'On time';
+                safe++;
+            }
+        }
+
+        return `
+            <div style="padding:12px;margin-bottom:10px;border-radius:8px;
+                border-left:5px solid ${color};
+                background:${color === 'red' ? '#fee2e2' : color === 'yellow' ? '#fef3c7' : '#dcfce7'};">
+                <strong>${book ? book.title : 'Unknown book'}</strong>
+                <p>Due: ${due ? due.toLocaleDateString() : 'Not set'}</p>
+                <strong>${status}</strong>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('studentDueSummary').innerHTML = `
+        <p>🔴 Overdue: ${overdue}</p>
+        <p>🟡 Due soon: ${dueSoon}</p>
+        <p>🟢 On time: ${safe}</p>
+    `;
+
+    document.getElementById('studentBorrowedBooks').innerHTML =
+        borrowedHTML || 'No currently borrowed books.';
+
+    // Past borrowed books
+    const pastHTML = history.map(tx => {
+        const book = state.books.find(b => b.id === tx.book_id);
+
+        return `
+            <div style="padding:10px;border-bottom:1px solid #ddd;">
+                <strong>${book ? book.title : 'Book not found'}</strong>
+                <p>Borrowed on: ${new Date(tx.created_at).toLocaleDateString()}</p>
+                <p>Returned on: ${new Date(tx.returned_at).toLocaleDateString()}</p>
+                <span style="color:green;">Returned</span>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById('studentPastBooks').innerHTML =
+        pastHTML || 'No past borrowed books.';
+
+    // Student reservations
+    document.getElementById('studentReservations').innerHTML =
+        myReservations.length
+            ? myReservations.map(r => {
+                const book = state.books.find(b => b.id === r.book_id);
+
+                return `
+                    <div style="padding:10px;border-bottom:1px solid #ddd;">
+                        <strong>${book ? book.title : 'Book not found'}</strong>
+                        <p>Status: ${r.status}</p>
+                        <p>Reserved on: ${new Date(r.created_at).toLocaleDateString()}</p>
+                    </div>
+                `;
+            }).join('')
+            : 'No reservations yet.';
+
+    // Available book catalog
+    const catalog = state.books.filter(
+        b => String(b.status || '').toLowerCase() === 'available'
+    );
+
+    document.getElementById('studentCatalog').innerHTML =
+        catalog.length
+            ? catalog.map(b => `
+                <div style="padding:10px;border-bottom:1px solid #ddd;">
+                    <strong>${b.title}</strong>
+                    <p>${b.author || 'Unknown author'}</p>
+                    <span style="color:green;">Available</span>
+                    <button class="btn btn-primary btn-sm"
+                        onclick="reserveBook('${b.id}')">
+                        📅 Reserve Book
+                    </button>
+                </div>
+            `).join('')
+            : 'No books currently available.';
+}
+
+function reserveBook(bookId) {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    if (!session) {
+        alert('Please login first.');
+        return;
+    }
+
+    const book = state.books.find(b => b.id === bookId);
+    if (!book || book.status !== 'available') {
+        alert('This book is no longer available.');
+        return;
+    }
+
+    const alreadyReserved = state.reservations.some(r =>
+        r.bookId === bookId &&
+        r.studentId === session.id &&
+        r.status === 'pending'
+    );
+
+    if (alreadyReserved) {
+        alert('You have already reserved this book.');
+        return;
+    }
+
+    state.reservations.push({
+        id: 'res_' + Date.now(),
+        bookId: bookId,
+        studentId: session.id,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+    });
+
+    saveData();
+    renderStudentDashboard();
+
+    alert('Book reserved successfully! Waiting for librarian approval.');
+}
+
+async function reserveBook(bookId) {
+    const session = JSON.parse(
+        localStorage.getItem('lib_student_session') || 'null'
+    );
+
+    const token = localStorage.getItem('lib_student_token');
+
+    if (!session || !token) {
+        alert('Please login first.');
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            'http://localhost:3000/api/reservations',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ bookId })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Reservation failed.');
+        }
+
+        state.reservations.push({
+            id: result.reservation.id,
+            bookId: result.reservation.book_id,
+            studentId: result.reservation.student_id,
+            status: result.reservation.status,
+            createdAt: result.reservation.created_at
+        });
+
+        saveData();
+        renderStudentDashboard();
+
+        alert('Book reserved successfully! Waiting for librarian approval.');
+
+    } catch (error) {
+        console.error('Reservation error:', error);
+        alert(error.message);
+    }
+}
+async function approveReservation(reservationId) {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        alert('Please sign in as librarian.');
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            `http://localhost:3000/api/admin/reservations/${encodeURIComponent(reservationId)}/approve`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Approval failed.');
+        }
+
+        await renderAdminReservations();
+
+        alert('Reservation approved successfully!');
+
+    } catch (error) {
+        console.error('Approval error:', error);
+        alert(error.message);
+    }
+}
+async function issueReservedBook(reservationId) {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        alert('Please sign in as librarian.');
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            `http://localhost:3000/api/admin/reservations/${encodeURIComponent(reservationId)}/issue`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to issue book.');
+        }
+
+        await renderAdminReservations();
+
+        if (typeof renderAll === 'function') {
+            renderAll();
+        }
+
+        alert('Book issued successfully! Due date: ' +
+            new Date(result.result.due_date).toLocaleDateString());
+
+    } catch (error) {
+        console.error('Issue book error:', error);
+        alert(error.message);
+    }
+}
+
+async function renderAdminReservations() {
+    const container = document.getElementById('adminReservations');
+
+    if (!container) return;
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        container.textContent = 'Please sign in as librarian.';
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            'http://localhost:3000/api/admin/reservations',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to load reservations.');
+        }
+
+        const reservations = result.reservations || [];
+
+        state.reservations = reservations.map(r => ({
+            id: r.id,
+            bookId: r.book_id,
+            studentId: r.student_id,
+            status: r.status,
+            createdAt: r.created_at
+        }));
+
+        if (!reservations.length) {
+            container.innerHTML = 'No reservations yet.';
+            return;
+        }
+
+        container.innerHTML = reservations.map(r => {
+            const book = Array.isArray(r.books) ? r.books[0] : r.books;
+            const student = Array.isArray(r.students) ? r.students[0] : r.students;
+
+            return `
+                <div style="padding:12px;border-bottom:1px solid #ddd;">
+                    <strong>${book ? book.title : 'Book not found'}</strong>
+                    <p>Student: ${student ? student.name : 'Unknown'}</p>
+                    <p>Admission No: ${student ? student.admission_number : 'Unknown'}</p>
+                    <p>Status: ${r.status}</p>
+
+                    ${r.status === 'pending' ? `
+                        <button class="btn btn-primary btn-sm"
+                            onclick="approveReservation('${r.id}')">
+                            Approve
+                        </button>
+                    ` : ''}
+
+                    ${r.status === 'approved' ? `
+                        <button class="btn btn-success btn-sm"
+                            onclick="issueReservedBook('${r.id}')">
+                            Issue Book
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Load reservations error:', error);
+        container.textContent = error.message;
+    }
+}
+
+// Load active borrowed books
+async function renderActiveBorrowedBooks() {
+    const container = document.getElementById('activeBorrowedBooks');
+    if (!container) return;
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        container.textContent = 'Please sign in as librarian.';
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            'http://localhost:3000/api/admin/transactions/active',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to load borrowed books.');
+        }
+
+        const transactions = result.transactions || [];
+
+        if (!transactions.length) {
+            container.textContent = 'No active borrowed books.';
+            return;
+        }
+
+        container.innerHTML = transactions.map(tx => {
+            const book = Array.isArray(tx.books) ? tx.books[0] : tx.books;
+            const student = Array.isArray(tx.students) ? tx.students[0] : tx.students;
+
+            return `
+                <div style="padding:12px;border-bottom:1px solid #ddd;">
+                    <strong>${book ? book.title : 'Unknown book'}</strong>
+                    <p>Student: ${student ? student.name : 'Unknown'}</p>
+                    <p>Admission No: ${student ? student.admission_number : 'Unknown'}</p>
+                    <p>Due Date: ${tx.due_date ? new Date(tx.due_date).toLocaleDateString() : '-'}</p>
+                    <button class="btn btn-warning btn-sm"
+                        onclick="returnBorrowedBook('${tx.id}')">
+                        Return Book
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Active borrowed books error:', error);
+        container.textContent = error.message;
+    }
+}
+
+// Return a borrowed book
+async function returnBorrowedBook(transactionId) {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        alert('Please sign in as librarian.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to return this book?')) {
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            `http://localhost:3000/api/admin/transactions/${encodeURIComponent(transactionId)}/return`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to return book.');
+        }
+
+        await renderActiveBorrowedBooks();
+
+        if (typeof renderAll === 'function') {
+            renderAll();
+        }
+
+        alert('Book returned successfully!');
+
+    } catch (error) {
+        console.error('Return book error:', error);
+        alert(error.message);
+    }
+}
+function renderStudentsPage() {
+    const container = document.getElementById('studentsPageList');
+    const count = document.getElementById('totalStudents');
+    const search = document.getElementById('studentSearch');
+
+    if (!container) return;
+
+    count.textContent = state.students.length;
+
+    const query = search.value.trim().toLowerCase();
+
+    const filtered = state.students.filter(s =>
+        String(s.name || '').toLowerCase().includes(query) ||
+        String(s.id || '').toLowerCase().includes(query) ||
+        String(s.admissionNumber || '').toLowerCase().includes(query)
+    );
+
+    if (!filtered.length) {
+        container.innerHTML = 'No students found.';
+        return;
+    }
+
+    container.innerHTML = `
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>Admission Number</th>
+                    <th>Student Name</th>
+                    <th>Class</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filtered.map(s => `
+                    <tr>
+                        <td>${s.admissionNumber || s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.class || '-'}</td>
+                        <td>${s.phone || '-'}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+function renderDashboard() {
             const total = state.books.length;
             const borrowed = state.books.filter(b => b.status === 'borrowed').length;
             const available = state.books.filter(b => b.status === 'available').length;
@@ -1534,6 +2376,43 @@
         // ========================================================================
         //  CATALOG
         // ========================================================================
+
+        // Load librarian catalog from Supabase
+async function loadAdminCatalog() {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) return;
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            'http://localhost:3000/api/admin/books',
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to load catalog.');
+        }
+
+        state.books = (result.books || []).map(book => ({
+            ...book,
+            createdAt: book.addedAt
+        }));
+
+        renderCatalog();
+
+    } catch (error) {
+        console.error('Catalog loading error:', error);
+        alert(error.message);
+    }
+}
         function renderCatalog() {
             const search = document.getElementById('catalogSearch').value.toLowerCase();
             const filter = document.getElementById('catalogFilter').value;
@@ -1770,124 +2649,225 @@
         function closeBookModal() {
             document.getElementById('bookModal').classList.remove('open');
         }
+   async function saveBook() {
+    const id = document.getElementById('editBookId').value;
+    const title = document.getElementById('bookTitle').value.trim();
+    const author = document.getElementById('bookAuthor').value.trim();
+    const isbn = document.getElementById('bookIsbn').value.trim();
 
-        function saveBook() {
-            const id = document.getElementById('editBookId').value;
-            const title = document.getElementById('bookTitle').value.trim();
-            const author = document.getElementById('bookAuthor').value.trim();
-            const isbn = document.getElementById('bookIsbn').value.trim();
-            const tags = document.getElementById('bookTags').value.trim().split(/\s+/).filter(t => t.startsWith('#')).map(t =>
-            t.substring(1));
-            const status = document.getElementById('bookStatus').value;
+    const tags = document.getElementById('bookTags').value
+        .trim()
+        .split(/\s+/)
+        .filter(t => t.startsWith('#'))
+        .map(t => t.substring(1));
 
-            if (!title) { toast('Title is required.', 'error'); return; }
+    const status = document.getElementById('bookStatus').value;
 
-            if (id) {
-                // Edit
-                const book = state.books.find(b => b.id === id);
-                if (book) {
-                    book.title = title;
-                    book.author = author;
-                    book.isbn = isbn;
-                    book.tags = tags;
-                    book.status = status;
-                    book.updatedAt = new Date().toISOString();
-                    // Revision history
-                    book.revisions = book.revisions || [];
-                    book.revisions.push({ action: 'edit', reason: 'Edited book details', user: state.currentUser?.email ||
-                            'system', timestamp: new Date().toISOString() });
-                    toast('✅ Book updated.', 'success');
-                }
-            } else {
-                // Add
-                const newBook = {
-                    id: 'bk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+    if (!title) {
+        toast('Title is required.', 'error');
+        return;
+    }
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        toast('Please sign in with Google first.', 'error');
+        return;
+    }
+
+    try {
+        toast('Saving book to Supabase...', 'info');
+
+        const token = await currentUser.getIdToken();
+
+        const isEditing = Boolean(id);
+
+        const response = await fetch(
+            isEditing
+                ? `http://localhost:3000/api/books/${encodeURIComponent(id)}`
+                : 'http://localhost:3000/api/books',
+            {
+                method: isEditing ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
                     title,
                     author,
                     isbn,
                     tags,
-                    status,
-                    borrowedBy: null,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    revisions: [{ action: 'create', reason: 'Book added', user: state.currentUser?.email || 'system',
-                        timestamp: new Date().toISOString() }]
-                };
-                state.books.push(newBook);
-                toast('✅ Book added.', 'success');
+                    status
+                })
             }
-            saveData();
-            closeBookModal();
-            renderAll();
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to save book.');
         }
 
-        function archiveBook(id) {
-            const book = state.books.find(b => b.id === id);
-            if (!book) { toast('Book not found.', 'error'); return; }
-            const reason = prompt('Archive reason:', 'Duplicate / no longer in use');
-            if (reason === null) return;
-            book.status = 'archived';
-            book.updatedAt = new Date().toISOString();
-            book.revisions = book.revisions || [];
-            book.revisions.push({ action: 'archive', reason: reason || 'Archived', user: state.currentUser?.email ||
-                    'system', timestamp: new Date().toISOString() });
-            saveData();
-            renderAll();
-            toast('📦 Book archived.', 'info');
+        closeBookModal();
+        await loadAdminCatalog();
+        renderAll();
+
+        toast(
+            isEditing
+                ? 'Book updated successfully!'
+                : 'Book saved successfully!',
+            'success'
+        );
+
+    } catch (error) {
+        console.error('Save book error:', error);
+        toast(error.message || 'Unable to save book.', 'error');
+    }
+}
+
+        async function archiveBook(id) {
+    const book = state.books.find(b => b.id === id);
+
+    if (!book) {
+        toast('Book not found.', 'error');
+        return;
+    }
+
+    const reason = prompt(
+        'Archive reason:',
+        'Duplicate / no longer in use'
+    );
+
+    if (reason === null) return;
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+        toast('Please sign in with Google first.', 'error');
+        return;
+    }
+
+    try {
+        const token = await currentUser.getIdToken();
+
+        const response = await fetch(
+            `http://localhost:3000/api/books/${encodeURIComponent(id)}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    title: book.title,
+                    author: book.author || '',
+                    isbn: book.isbn || '',
+                    tags: book.tags || [],
+                    status: 'archived'
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Unable to archive book.');
         }
 
+        await loadAdminCatalog();
+        renderAll();
+
+        toast('Book archived successfully!', 'success');
+
+    } catch (error) {
+        console.error('Archive book error:', error);
+        toast(error.message || 'Unable to archive book.', 'error');
+    }
+}
         // ========================================================================
         //  STUDENT MANAGEMENT
         // ========================================================================
-        function importStudentsCSV() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.csv';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    try {
-                        const text = ev.target.result;
-                        const lines = text.split('\n').filter(l => l.trim());
-                        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-                        const idIdx = headers.findIndex(h => h.includes('admission') || h.includes('id'));
-                        const nameIdx = headers.findIndex(h => h.includes('name'));
-                        const classIdx = headers.findIndex(h => h.includes('class'));
-                        if (idIdx === -1 || nameIdx === -1) {
-                            toast('CSV must have "admission" and "name" columns.', 'error');
-                            return;
-                        }
-                        let count = 0;
-                        for (let i = 1; i < lines.length; i++) {
-                            const cols = lines[i].split(',').map(c => c.trim());
-                            const id = cols[idIdx] || '';
-                            const name = cols[nameIdx] || '';
-                            const cls = classIdx !== -1 ? cols[classIdx] || '' : '';
-                            if (id && name) {
-                                const existing = state.students.find(s => s.id === id);
-                                if (existing) {
-                                    existing.name = name;
-                                    existing.class = cls;
-                                } else {
-                                    state.students.push({ id, name, class: cls, createdAt: new Date().toISOString(),
-                                        updatedAt: new Date().toISOString() });
-                                }
-                                count++;
-                            }
-                        }
-                        saveData();
-                        renderAll();
-                        toast(`✅ Imported ${count} students.`, 'success');
-                    } catch (err) {
-                        toast('❌ CSV parse error: ' + err.message, 'error');
+        
+function importStudentsCSV() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(ev) {
+            try {
+                const lines = ev.target.result.split('\n').filter(l => l.trim());
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+                const idIdx = headers.findIndex(h =>
+                    h.includes('admission') || h === 'admin' || h === 'id'
+                );
+                const nameIdx = headers.findIndex(h => h.includes('name'));
+                const classIdx = headers.findIndex(h => h.includes('class'));
+                const phoneIdx = headers.findIndex(h =>
+                    h.includes('phone') || h.includes('mobile') || h.includes('ph-1')
+                );
+
+                if (idIdx === -1 || nameIdx === -1) {
+                    toast('CSV needs admission and name columns.', 'error');
+                    return;
+                }
+
+                let count = 0;
+
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim());
+
+                    const id = cols[idIdx] || '';
+                    const name = cols[nameIdx] || '';
+                    const cls = classIdx !== -1 ? cols[classIdx] || '' : '';
+                    const phone = phoneIdx !== -1 ? cols[phoneIdx] || '' : '';
+
+                    if (!id || !name) continue;
+
+                    const existing = state.students.find(s =>
+                        String(s.id).trim().toLowerCase() === id.toLowerCase()
+                    );
+
+                    if (existing) {
+                        existing.name = name;
+                        existing.class = cls;
+                        if (phone) existing.phone = phone;
+                        existing.updatedAt = new Date().toISOString();
+                    } else {
+                        state.students.push({
+                            id,
+                            admissionNumber: id,
+                            name,
+                            class: cls,
+                            phone,
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        });
                     }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
+
+                    count++;
+                }
+
+                saveData();
+                renderAll();
+                toast(`Imported ${count} students successfully.`, 'success');
+
+            } catch (err) {
+                toast('CSV error: ' + err.message, 'error');
+            }
+        };
+
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
 
         // ========================================================================
         //  SCANNER
@@ -2161,6 +3141,9 @@
                 archived: false,
                 archiveReason: null,
                 createdAt: new Date().toISOString(),
+                dueDate: type === 'borrow'
+    ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+    : null,
                 updatedAt: new Date().toISOString(),
                 createdBy: state.currentUser?.email || 'system',
                 revisions: [{ action: 'create', reason: type === 'borrow' ? 'Borrowed book' : 'Returned book',
@@ -2347,67 +3330,105 @@
             URL.revokeObjectURL(url);
         }
 
-        function importBooksCSV() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.csv';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    try {
-                        const text = ev.target.result;
-                        const lines = text.split('\n').filter(l => l.trim());
-                        const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-                        const idIdx = headers.indexOf('id');
-                        const titleIdx = headers.indexOf('title');
-                        const authorIdx = headers.indexOf('author');
-                        const isbnIdx = headers.indexOf('isbn');
-                        const statusIdx = headers.indexOf('status');
-                        const tagsIdx = headers.indexOf('tags');
-                        const borrowedIdx = headers.indexOf('borrowedby');
-                        if (titleIdx === -1) { toast('CSV must have "title" column.', 'error'); return; }
-                        let count = 0;
-                        for (let i = 1; i < lines.length; i++) {
-                            const cols = lines[i].split(',').map(c => c.trim());
-                            const title = cols[titleIdx] || '';
-                            if (!title) continue;
-                            const id = idIdx !== -1 ? cols[idIdx] || 'bk_' + Date.now() + '_' + i : 'bk_' + Date.now() +
-                                '_' + i;
-                            const existing = state.books.find(b => b.id === id);
-                            const book = {
-                                id,
-                                title,
-                                author: authorIdx !== -1 ? cols[authorIdx] || '' : '',
-                                isbn: isbnIdx !== -1 ? cols[isbnIdx] || '' : '',
-                                status: statusIdx !== -1 ? cols[statusIdx] || 'available' : 'available',
-                                tags: tagsIdx !== -1 ? cols[tagsIdx].split(';').filter(t => t) : [],
-                                borrowedBy: borrowedIdx !== -1 ? cols[borrowedIdx] || null : null,
-                                createdAt: new Date().toISOString(),
-                                updatedAt: new Date().toISOString(),
-                                revisions: [{ action: 'import', reason: 'Imported from CSV',
-                                    user: state.currentUser?.email || 'system', timestamp: new Date()
-                                    .toISOString() }]
-                            };
-                            if (existing) {
-                                Object.assign(existing, book);
-                            } else {
-                                state.books.push(book);
-                            }
-                            count++;
+async function importBooksCSV() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+
+    input.onchange = async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = async function(ev) {
+            try {
+                const text = ev.target.result;
+                const lines = text.split('\n').filter(l => l.trim());
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+                const idIdx = headers.indexOf('id');
+                const titleIdx = headers.indexOf('title');
+                const authorIdx = headers.indexOf('author');
+                const isbnIdx = headers.indexOf('isbn');
+                const statusIdx = headers.indexOf('status');
+                const tagsIdx = headers.indexOf('tags');
+
+                if (titleIdx === -1) {
+                    toast('CSV must have "title" column.', 'error');
+                    return;
+                }
+
+                const currentUser = auth.currentUser;
+
+                if (!currentUser) {
+                    toast('Please sign in with Google first.', 'error');
+                    return;
+                }
+
+                const token = await currentUser.getIdToken();
+                let count = 0;
+
+                for (let i = 1; i < lines.length; i++) {
+                    const cols = lines[i].split(',').map(c => c.trim());
+                    const title = cols[titleIdx] || '';
+
+                    if (!title) continue;
+
+                    const id = idIdx !== -1 && cols[idIdx]
+                        ? cols[idIdx]
+                        : 'bk_' + Date.now() + '_' + i;
+
+                    const existing = state.books.find(b => b.id === id);
+
+                    const bookData = {
+                        title,
+                        author: authorIdx !== -1 ? cols[authorIdx] || '' : '',
+                        isbn: isbnIdx !== -1 ? cols[isbnIdx] || '' : '',
+                        status: statusIdx !== -1 ? cols[statusIdx] || 'available' : 'available',
+                        tags: tagsIdx !== -1 ? cols[tagsIdx].split(';').filter(t => t) : []
+                    };
+
+                    const response = await fetch(
+                        existing
+                            ? `http://localhost:3000/api/books/${encodeURIComponent(id)}`
+                            : 'http://localhost:3000/api/books',
+                        {
+                            method: existing ? 'PUT' : 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + token
+                            },
+                            body: JSON.stringify(bookData)
                         }
-                        saveData();
-                        renderAll();
-                        toast(`✅ Imported ${count} books.`, 'success');
-                    } catch (err) {
-                        toast('❌ CSV parse error: ' + err.message, 'error');
+                    );
+
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Unable to import book: ' + title);
                     }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
+
+                    count++;
+                }
+
+                await loadAdminCatalog();
+                renderAll();
+
+                toast(`Imported ${count} books into Supabase successfully.`, 'success');
+
+            } catch (err) {
+                console.error('CSV import error:', err);
+                toast('CSV import error: ' + err.message, 'error');
+            }
+        };
+
+        reader.readAsText(file);
+    };
+
+    input.click();
+}
+
 
         function importAllCSV() {
             // Import books, students, transactions - prompt for each
